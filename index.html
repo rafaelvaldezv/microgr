@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Asa — Microbiología Clínica</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23111827'/%3E%3Crect x='46' y='58' width='8' height='32' rx='4' fill='%23e5e7eb'/%3E%3Crect x='46' y='58' width='8' height='14' rx='4' fill='%230f9e75'/%3E%3Crect x='47' y='50' width='6' height='12' rx='3' fill='%230f9e75'/%3E%3Ccircle cx='50' cy='40' r='13' fill='none' stroke='%230f9e75' stroke-width='5'/%3E%3Crect x='44' y='49' width='12' height='8' fill='%23111827'/%3E%3C/svg%3E">
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
@@ -2159,12 +2159,13 @@ main{padding:12px 16px 100px;max-width:600px;margin:0 auto}
       <button class="modal-close" onclick="closeScanner()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="scanner-area" id="scannerArea" style="cursor:pointer;overflow:hidden;position:relative">
-        <div id="qr-reader" style="width:100%;display:none"></div>
-        <div id="scannerOverlay" onclick="startCamera()" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%">
+      <div class="scanner-area" id="scannerArea" style="cursor:pointer;overflow:hidden;position:relative" onclick="triggerScan()">
+        <canvas id="scanCanvas" style="display:none;width:100%;height:100%;object-fit:contain"></canvas>
+        <div id="scannerOverlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;position:absolute;inset:0">
           <div class="scanner-icon">📷</div>
-          <div class="scanner-hint">Toca para escanear código de barras</div>
+          <div class="scanner-hint" id="scannerHint">Toca para fotografiar el código</div>
         </div>
+        <input type="file" id="scanFileInput" accept="image/*" capture="environment" style="display:none" onchange="processScanImage(this)">
       </div>
       <div class="form-group">
         <label class="form-label">Folio de muestra</label>
@@ -2575,67 +2576,96 @@ function openScanner(){document.getElementById('scannerModal').classList.add('op
 function closeScanner(){stopCamera();document.getElementById('scannerModal').classList.remove('open')}
 function selectType(el,t){document.querySelectorAll('.type-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');selType=t}
 
-let html5QrScanner = null;
+let scanDecoder = null;
 
-function startCamera(){
-  const overlay = document.getElementById('scannerOverlay');
-  const reader = document.getElementById('qr-reader');
-  
-  overlay.style.display = 'none';
-  reader.style.display = 'block';
-
-  if(html5QrScanner){ 
-    try{ html5QrScanner.stop().then(()=>{ html5QrScanner.clear(); html5QrScanner=null; _startScan(); }); }
-    catch(e){ html5QrScanner=null; _startScan(); }
-  } else {
-    _startScan();
-  }
+function triggerScan(){
+  document.getElementById('scanFileInput').click();
 }
 
-function _startScan(){
-  const config = {
-    fps: 10,
-    qrbox: { width: 250, height: 80 },
-    formatsToSupport: [
-      Html5QrcodeSupportedFormats.CODE_128,
-      Html5QrcodeSupportedFormats.CODE_39,
-      Html5QrcodeSupportedFormats.EAN_13,
-      Html5QrcodeSupportedFormats.EAN_8
-    ],
-    aspectRatio: 2.0
+function processScanImage(input){
+  if(!input.files||!input.files[0]) return;
+  const file = input.files[0];
+  const hint = document.getElementById('scannerHint');
+  hint.textContent = 'Procesando…';
+
+  const img = new Image();
+  const url = URL.createObjectURL(file);
+  img.onload = function(){
+    const canvas = document.getElementById('scanCanvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    canvas.style.display = 'block';
+    URL.revokeObjectURL(url);
+
+    if(typeof ZXing === 'undefined'){
+      hint.textContent = 'Librería no cargada, ingresa manualmente';
+      return;
+    }
+
+    const reader = new ZXing.MultiFormatReader();
+    const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
+    const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
+
+    try {
+      const result = reader.decode(binaryBitmap);
+      const raw = result.getText();
+      parseBC(raw);
+      canvas.style.display = 'none';
+      hint.textContent = 'Toca para fotografiar el código';
+      showToast('Código leído: ' + raw.slice(0,20));
+    } catch(e) {
+      // Try with inverted image
+      try {
+        const inverted = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(new ZXing.InvertedLuminanceSource(luminanceSource)));
+        const result2 = reader.decode(inverted);
+        const raw2 = result2.getText();
+        parseBC(raw2);
+        canvas.style.display = 'none';
+        hint.textContent = 'Toca para fotografiar el código';
+        showToast('Código leído');
+      } catch(e2) {
+        hint.textContent = 'No se detectó código — intenta de nuevo o ingresa manualmente';
+        canvas.style.display = 'none';
+        setTimeout(()=>{ hint.textContent = 'Toca para fotografiar el código'; }, 3000);
+      }
+    }
+    input.value = '';
   };
-
-  html5QrScanner = new Html5Qrcode("qr-reader");
-  html5QrScanner.start(
-    { facingMode: "environment" },
-    config,
-    (decodedText, decodedResult) => {
-      parseBC(decodedText);
-      stopCamera();
-      showToast('Código leído');
-    },
-    (errorMsg) => { /* ignore scan errors */ }
-  ).catch(err => {
-    showToast('Sin permiso para la cámara');
-    stopCamera();
-  });
+  img.src = url;
 }
 
-function stopCamera(){
-  const overlay = document.getElementById('scannerOverlay');
-  const reader = document.getElementById('qr-reader');
-  if(overlay) overlay.style.display = 'flex';
-  if(reader) reader.style.display = 'none';
-  if(html5QrScanner){
-    try{
-      html5QrScanner.stop().then(()=>{ 
-        if(html5QrScanner){ html5QrScanner.clear(); html5QrScanner=null; }
-      }).catch(()=>{ html5QrScanner=null; });
-    } catch(e){ html5QrScanner=null; }
+function startCamera(){ triggerScan(); }
+function stopCamera(){ 
+  const canvas = document.getElementById('scanCanvas');
+  if(canvas) canvas.style.display = 'none';
+  const hint = document.getElementById('scannerHint');
+  if(hint) hint.textContent = 'Toca para fotografiar el código';
+}
+
+function parseBC(raw){
+  const clean = raw.trim();
+  document.getElementById('inp-folio').value = clean;
+
+  // Extract date from folio format YYMMDD...
+  // Examples: 2604140677.125 -> YY=26 MM=04 DD=14 -> 14/04/2026
+  //           2604201053.241 -> YY=26 MM=04 DD=20 -> 20/04/2026
+  const digits = clean.replace(/[^\d]/g, '');
+  if(digits.length >= 6){
+    const yy = digits.slice(0,2);
+    const mm = digits.slice(2,4);
+    const dd = digits.slice(4,6);
+    const yyN = parseInt(yy), mmN = parseInt(mm), ddN = parseInt(dd);
+    if(yyN>=20 && yyN<=40 && mmN>=1 && mmN<=12 && ddN>=1 && ddN<=31){
+      const year = 2000 + yyN;
+      // Pre-fill date hint and show toast
+      showToast('Folio ' + clean.slice(0,18) + ' · Fecha muestra: ' + dd+'/'+mm+'/'+year);
+      return;
+    }
   }
-  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  showToast('Folio: ' + clean.slice(0,20));
 }
-function parseBC(raw){document.getElementById('inp-folio').value=raw}
 
 function saveCase(){
   const folio=document.getElementById('inp-folio').value.trim();
