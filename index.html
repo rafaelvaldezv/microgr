@@ -2159,13 +2159,12 @@ main{padding:12px 16px 100px;max-width:600px;margin:0 auto}
       <button class="modal-close" onclick="closeScanner()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="scanner-area" id="scannerArea" style="cursor:pointer;overflow:hidden;position:relative" onclick="triggerScan()">
-        <canvas id="scanCanvas" style="display:none;width:100%;height:100%;object-fit:contain"></canvas>
-        <div id="scannerOverlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;position:absolute;inset:0">
+      <div class="scanner-area" id="scannerArea" style="cursor:pointer;overflow:hidden;position:relative">
+        <video id="cameraVideo" autoplay playsinline muted style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></video>
+        <div id="scannerOverlay" onclick="startCamera()" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;position:relative;z-index:2">
           <div class="scanner-icon">📷</div>
-          <div class="scanner-hint" id="scannerHint">Toca para fotografiar el código</div>
+          <div class="scanner-hint" id="scannerHint">Toca para escanear</div>
         </div>
-        <input type="file" id="scanFileInput" accept="image/*" capture="environment" style="display:none" onchange="processScanImage(this)">
       </div>
       <div class="form-group">
         <label class="form-label">Folio de muestra</label>
@@ -2576,72 +2575,80 @@ function openScanner(){document.getElementById('scannerModal').classList.add('op
 function closeScanner(){stopCamera();document.getElementById('scannerModal').classList.remove('open')}
 function selectType(el,t){document.querySelectorAll('.type-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');selType=t}
 
-let scanDecoder = null;
+let zxingCodeReader = null;
+let scanActive = false;
 
-function triggerScan(){
-  document.getElementById('scanFileInput').click();
-}
+function startCamera(){
+  if(scanActive) return;
+  scanActive = true;
 
-function processScanImage(input){
-  if(!input.files||!input.files[0]) return;
-  const file = input.files[0];
+  const video = document.getElementById('cameraVideo');
+  const overlay = document.getElementById('scannerOverlay');
   const hint = document.getElementById('scannerHint');
-  hint.textContent = 'Procesando…';
 
-  const img = new Image();
-  const url = URL.createObjectURL(file);
-  img.onload = function(){
-    const canvas = document.getElementById('scanCanvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    canvas.style.display = 'block';
-    URL.revokeObjectURL(url);
+  video.style.display = 'block';
+  overlay.style.pointerEvents = 'none';
+  hint.textContent = 'Apunta al código…';
 
-    if(typeof ZXing === 'undefined'){
-      hint.textContent = 'Librería no cargada, ingresa manualmente';
-      return;
-    }
+  // Always create a fresh reader - this is the key fix for the freeze
+  _destroyReader();
+  zxingCodeReader = new ZXing.BrowserMultiFormatReader();
 
-    const reader = new ZXing.MultiFormatReader();
-    const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
-    const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
-
-    try {
-      const result = reader.decode(binaryBitmap);
-      const raw = result.getText();
-      parseBC(raw);
-      canvas.style.display = 'none';
-      hint.textContent = 'Toca para fotografiar el código';
-      showToast('Código leído: ' + raw.slice(0,20));
-    } catch(e) {
-      // Try with inverted image
-      try {
-        const inverted = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(new ZXing.InvertedLuminanceSource(luminanceSource)));
-        const result2 = reader.decode(inverted);
-        const raw2 = result2.getText();
-        parseBC(raw2);
-        canvas.style.display = 'none';
-        hint.textContent = 'Toca para fotografiar el código';
-        showToast('Código leído');
-      } catch(e2) {
-        hint.textContent = 'No se detectó código — intenta de nuevo o ingresa manualmente';
-        canvas.style.display = 'none';
-        setTimeout(()=>{ hint.textContent = 'Toca para fotografiar el código'; }, 3000);
+  zxingCodeReader.decodeFromConstraints(
+    {
+      audio: false,
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+    },
+    video,
+    (result, err) => {
+      if (result) {
+        const raw = result.getText();
+        stopCamera();
+        parseBC(raw);
       }
+      // Ignore err - fires continuously for non-detections, that's normal
     }
-    input.value = '';
-  };
-  img.src = url;
+  ).catch(e => {
+    stopCamera();
+    showToast('Sin acceso a cámara');
+  });
+
+  // Auto-stop after 30 seconds
+  setTimeout(() => {
+    if(scanActive) {
+      stopCamera();
+      showToast('Tiempo agotado — ingresa el folio manualmente');
+    }
+  }, 30000);
 }
 
-function startCamera(){ triggerScan(); }
-function stopCamera(){ 
-  const canvas = document.getElementById('scanCanvas');
-  if(canvas) canvas.style.display = 'none';
+function _destroyReader(){
+  if(zxingCodeReader){
+    try { zxingCodeReader.reset(); } catch(e){}
+    try { zxingCodeReader.stopAsyncDecode(); } catch(e){}
+    zxingCodeReader = null;
+  }
+}
+
+function stopCamera(){
+  scanActive = false;
+  _destroyReader();
+
+  const video = document.getElementById('cameraVideo');
+  if(video){
+    try {
+      if(video.srcObject){
+        video.srcObject.getTracks().forEach(t => t.stop());
+        video.srcObject = null;
+      }
+    } catch(e){}
+    video.style.display = 'none';
+  }
+
+  const overlay = document.getElementById('scannerOverlay');
+  if(overlay) overlay.style.pointerEvents = 'auto';
   const hint = document.getElementById('scannerHint');
-  if(hint) hint.textContent = 'Toca para fotografiar el código';
+  if(hint) hint.textContent = 'Toca para escanear';
 }
 
 function parseBC(raw){
