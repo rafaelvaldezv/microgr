@@ -2639,6 +2639,14 @@ function startCamera(){
     if(code && code.length > 3){
       stopCamera();
       parseBC(code);
+      // Expediente is not in barcode — highlight that field
+      setTimeout(()=>{
+        const expInp = document.getElementById('inp-exp');
+        if(expInp && !expInp.value){
+          expInp.focus();
+          expInp.placeholder = 'Ingresa el expediente manualmente';
+        }
+      }, 600);
     }
   });
 
@@ -2669,11 +2677,12 @@ function parseOCRText(t){}
 
 function parseBC(raw){
   const clean = raw.trim();
+
+  // Fill folio field
   document.getElementById('inp-folio').value = clean;
 
-  // Extract date from folio format YYMMDD...
-  // Examples: 2604140677.125 -> YY=26 MM=04 DD=14 -> 14/04/2026
-  //           2604201053.241 -> YY=26 MM=04 DD=20 -> 20/04/2026
+  // Extract date YYMMDD from first 6 digits of folio
+  // e.g. 2604140677.125 -> YY=26 MM=04 DD=14 -> 14/04/2026
   const digits = clean.replace(/[^0-9]/g, '');
   if(digits.length >= 6){
     const yy = digits.slice(0,2);
@@ -2681,9 +2690,11 @@ function parseBC(raw){
     const dd = digits.slice(4,6);
     const yyN = parseInt(yy), mmN = parseInt(mm), ddN = parseInt(dd);
     if(yyN>=20 && yyN<=40 && mmN>=1 && mmN<=12 && ddN>=1 && ddN<=31){
-      const year = 2000 + yyN;
-      // Pre-fill date hint and show toast
-      showToast('Folio ' + clean.slice(0,18) + ' · Fecha muestra: ' + dd+'/'+mm+'/'+year);
+      const fecha = dd+'/'+mm+'/20'+yy;
+      // FIX: actually fill the fecha input field
+      const fechaInp = document.getElementById('inp-fecha');
+      if(fechaInp) fechaInp.value = fecha;
+      showToast('Folio ✓ · Fecha: ' + fecha);
       return;
     }
   }
