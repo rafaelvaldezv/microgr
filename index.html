@@ -2647,25 +2647,32 @@ function parseOCRText(text){
 
   let folio = '', expediente = '';
 
-  // FOLIO: exactly 10 digits + dot + 3 digits e.g. 2604140677.125
-  // Use original text with spaces to find it (OCR usually keeps numbers together)
-  const fm = text.match(/\b(\d{10}\.\d{3})\b/);
-  if(fm) folio = fm[1];
+  // EXPEDIENTE: long number starting with 00 (this worked in v1)
+  const em = text.match(/(0{2,}\d{6,10})/);
+  if(em) expediente = em[1].trim();
 
-  // If not found with word boundary, try without (in case OCR merges chars)
+  // FOLIO: try multiple strategies since OCR can mangle it
+  // Strategy 1: exact pattern with dot e.g. 2604140677.125
+  const f1 = text.match(/(\d{9,12}[.,]\d{2,4})/);
+  if(f1) folio = f1[1].replace(',', '.').trim();
+
+  // Strategy 2: if OCR added spaces inside the number, remove them and retry
   if(!folio){
-    const nosp = text.replace(/\s/g,'');
-    const fm2 = nosp.match(/(\d{10}\.\d{3})/);
-    if(fm2) folio = fm2[1];
+    const nosp = text.replace(/\s/g, '');
+    const f2 = nosp.match(/(\d{9,12}[.,]\d{2,4})/);
+    if(f2) folio = f2[1].replace(',', '.').trim();
   }
 
-  // EXPEDIENTE: 10 digit number starting with 00 e.g. 0001419844
-  const em = text.match(/\b(00\d{8})\b/);
-  if(em) expediente = em[1];
-  if(!expediente){
-    const nosp = text.replace(/\s/g,'');
-    const em2 = nosp.match(/(00\d{8})/);
-    if(em2) expediente = em2[1];
+  // Strategy 3: look for the large standalone number block (usually at bottom of label)
+  // It's the longest digit sequence on the label
+  if(!folio){
+    const allNums = text.match(/\d+/g) || [];
+    const longest = allNums.sort((a,b) => b.length - a.length)[0];
+    if(longest && longest.length >= 8) {
+      // Format it as folio: first 10 digits + dot + last 3
+      const clean = longest.slice(0, 13);
+      if(clean.length >= 10) folio = clean.slice(0,10) + '.' + clean.slice(10,13);
+    }
   }
 
   // Fill fields
