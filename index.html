@@ -2637,16 +2637,8 @@ function startCamera(){
   Quagga.onDetected(function(result){
     const code = result.codeResult.code;
     if(code && code.length > 3){
-      stopCamera();
       parseBC(code);
-      // Expediente is not in barcode — highlight that field
-      setTimeout(()=>{
-        const expInp = document.getElementById('inp-exp');
-        if(expInp && !expInp.value){
-          expInp.focus();
-          expInp.placeholder = 'Ingresa el expediente manualmente';
-        }
-      }, 600);
+      setTimeout(()=>{ stopCamera(); }, 200);
     }
   });
 
