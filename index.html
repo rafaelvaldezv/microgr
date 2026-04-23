@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Asa — Microbiología Clínica</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23111827'/%3E%3Crect x='46' y='58' width='8' height='32' rx='4' fill='%23e5e7eb'/%3E%3Crect x='46' y='58' width='8' height='14' rx='4' fill='%230f9e75'/%3E%3Crect x='47' y='50' width='6' height='12' rx='3' fill='%230f9e75'/%3E%3Ccircle cx='50' cy='40' r='13' fill='none' stroke='%230f9e75' stroke-width='5'/%3E%3Crect x='44' y='49' width='12' height='8' fill='%23111827'/%3E%3C/svg%3E">
-<script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+<script src="https://unpkg.com/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
@@ -2159,13 +2159,12 @@ main{padding:12px 16px 100px;max-width:600px;margin:0 auto}
       <button class="modal-close" onclick="closeScanner()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="scanner-area" id="scannerArea" style="cursor:pointer;overflow:hidden;position:relative;min-height:140px" onclick="triggerOCR()">
-        <canvas id="ocrCanvas" style="display:none;max-width:100%;border-radius:8px"></canvas>
-        <div id="scannerOverlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;position:absolute;inset:0;z-index:2">
+      <div class="scanner-area" id="scannerArea" style="cursor:pointer;overflow:hidden;position:relative;min-height:160px">
+        <div id="quagga-container" style="width:100%;height:100%;position:absolute;inset:0;display:none"></div>
+        <div id="scannerOverlay" onclick="startCamera()" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;position:absolute;inset:0;z-index:2">
           <div class="scanner-icon" id="scanIcon">📷</div>
-          <div class="scanner-hint" id="scannerHint">Toca para fotografiar la etiqueta</div>
+          <div class="scanner-hint" id="scannerHint">Toca para escanear</div>
         </div>
-        <input type="file" id="ocrFileInput" accept="image/*" capture="environment" style="display:none" onchange="runOCR(this)">
       </div>
       <div class="form-group">
         <label class="form-label">Folio de muestra</label>
@@ -2577,142 +2576,96 @@ function openScanner(){document.getElementById('scannerModal').classList.add('op
 function closeScanner(){stopCamera();document.getElementById('scannerModal').classList.remove('open')}
 function selectType(el,t){document.querySelectorAll('.type-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');selType=t}
 
-let ocrRunning = false;
+let scanActive = false;
 
-function triggerOCR(){
-  if(ocrRunning) return;
-  document.getElementById('ocrFileInput').value = '';
-  document.getElementById('ocrFileInput').click();
-}
+function startCamera(){
+  if(scanActive) return;
 
-function runOCR(input){
-  if(!input.files || !input.files[0]) return;
-  ocrRunning = true;
-
-  const hint = document.getElementById('scannerHint');
-  const icon = document.getElementById('scanIcon');
-  const canvas = document.getElementById('ocrCanvas');
-
-  icon.textContent = '⏳';
-  hint.textContent = 'Leyendo etiqueta…';
-
-  const file = input.files[0];
-  const imgURL = URL.createObjectURL(file);
-  const img = new Image();
-
-  img.onload = async () => {
-    // Draw image to canvas for display
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    URL.revokeObjectURL(imgURL);
-
-    try {
-      hint.textContent = 'Procesando OCR…';
-
-      // Run Tesseract OCR
-      const result = await Tesseract.recognize(canvas, 'eng', {
-        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789./- ',
-      });
-
-      const text = result.data.text;
-      console.log('OCR raw:', text);
-      parseOCRText(text);
-
-    } catch(e) {
-      hint.textContent = 'Error en OCR — ingresa manualmente';
-      icon.textContent = '📷';
-      ocrRunning = false;
-    }
-
-    input.value = '';
-  };
-
-  img.onerror = () => {
-    hint.textContent = 'Error al leer imagen';
-    icon.textContent = '📷';
-    ocrRunning = false;
-    input.value = '';
-  };
-
-  img.src = imgURL;
-}
-
-function parseOCRText(text){
+  const overlay = document.getElementById('scannerOverlay');
+  const container = document.getElementById('quagga-container');
   const hint = document.getElementById('scannerHint');
   const icon = document.getElementById('scanIcon');
 
-  console.log('OCR raw:', text);
+  overlay.style.display = 'none';
+  container.style.display = 'block';
+  icon.textContent = '🔍';
+  hint.textContent = 'Apunta al código…';
+  scanActive = true;
 
-  let folio = '', expediente = '';
-
-  // EXPEDIENTE: long number starting with 00 (this worked in v1)
-  const em = text.match(/(0{2,}\d{6,10})/);
-  if(em) expediente = em[1].trim();
-
-  // FOLIO: try multiple strategies since OCR can mangle it
-  // Strategy 1: exact pattern with dot e.g. 2604140677.125
-  const f1 = text.match(/(\d{9,12}[.,]\d{2,4})/);
-  if(f1) folio = f1[1].replace(',', '.').trim();
-
-  // Strategy 2: if OCR added spaces inside the number, remove them and retry
-  if(!folio){
-    const nosp = text.replace(/\s/g, '');
-    const f2 = nosp.match(/(\d{9,12}[.,]\d{2,4})/);
-    if(f2) folio = f2[1].replace(',', '.').trim();
-  }
-
-  // Strategy 3: look for the large standalone number block (usually at bottom of label)
-  // It's the longest digit sequence on the label
-  if(!folio){
-    const allNums = text.match(/\d+/g) || [];
-    const longest = allNums.sort((a,b) => b.length - a.length)[0];
-    if(longest && longest.length >= 8) {
-      // Format it as folio: first 10 digits + dot + last 3
-      const clean = longest.slice(0, 13);
-      if(clean.length >= 10) folio = clean.slice(0,10) + '.' + clean.slice(10,13);
-    }
-  }
-
-  // Fill fields
-  if(folio){ document.getElementById('inp-folio').value = folio; autoExtractDate(folio); }
-  if(expediente) document.getElementById('inp-exp').value = expediente;
-
-  // Feedback
-  const parts = [];
-  if(folio) parts.push('Folio ✓');
-  if(expediente) parts.push('Exp ✓');
-
-  if(parts.length > 0){
-    hint.textContent = parts.join(' · ');
-    icon.textContent = '✅';
-    showToast('Leído: ' + parts.join(', '));
-  } else {
-    hint.textContent = 'No detectado — intenta de nuevo o ingresa manualmente';
-    icon.textContent = '⚠️';
-    showToast('OCR sin resultados — intenta de nuevo');
-  }
-
-  ocrRunning = false;
-}
-
-// Keep startCamera and stopCamera as stubs for compatibility
-function startCamera(){ triggerOCR(); }
-function stopCamera(){ ocrRunning = false; }
-
-function autoExtractDate(val){
-  const digits = val.replace(/[^0-9]/g,'');
-  if(digits.length >= 6){
-    const yy=digits.slice(0,2), mm=digits.slice(2,4), dd=digits.slice(4,6);
-    const yyN=parseInt(yy), mmN=parseInt(mm), ddN=parseInt(dd);
-    if(yyN>=20&&yyN<=40&&mmN>=1&&mmN<=12&&ddN>=1&&ddN<=31){
-      document.getElementById('inp-fecha').value = dd+'/'+mm+'/20'+yy;
+  Quagga.init({
+    inputStream: {
+      name: 'Live',
+      type: 'LiveStream',
+      target: container,
+      constraints: {
+        facingMode: 'environment',
+        width: { min: 640, ideal: 1280, max: 1920 },
+        height: { min: 480, ideal: 720, max: 1080 },
+      },
+      area: {
+        top: '20%',
+        right: '10%',
+        left: '10%',
+        bottom: '20%',
+      },
+    },
+    locator: {
+      patchSize: 'medium',
+      halfSample: true,
+    },
+    numOfWorkers: 0,
+    frequency: 10,
+    decoder: {
+      readers: [
+        'code_128_reader',
+        'code_39_reader',
+        'ean_reader',
+        'ean_8_reader',
+      ],
+      multiple: false,
+    },
+    locate: true,
+  }, function(err){
+    if(err){
+      stopCamera();
+      showToast('Error al iniciar cámara');
       return;
     }
-  }
-  document.getElementById('inp-fecha').value = '';
+    Quagga.start();
+  });
+
+  Quagga.onDetected(function(result){
+    const code = result.codeResult.code;
+    if(code && code.length > 3){
+      stopCamera();
+      parseBC(code);
+    }
+  });
+
+  // Auto-stop after 30s
+  setTimeout(()=>{ if(scanActive) stopCamera(); }, 30000);
 }
+
+function stopCamera(){
+  scanActive = false;
+  try { Quagga.stop(); } catch(e){}
+  try { Quagga.offDetected(); } catch(e){}
+
+  const overlay = document.getElementById('scannerOverlay');
+  const container = document.getElementById('quagga-container');
+  const hint = document.getElementById('scannerHint');
+  const icon = document.getElementById('scanIcon');
+
+  if(overlay) overlay.style.display = 'flex';
+  if(container){ container.style.display = 'none'; container.innerHTML = ''; }
+  if(hint) hint.textContent = 'Toca para escanear';
+  if(icon) icon.textContent = '📷';
+}
+
+// Stubs for OCR remnants
+function triggerOCR(){ startCamera(); }
+function runOCR(){ startCamera(); }
+function parseOCRText(t){}
 
 function parseBC(raw){
   const clean = raw.trim();
@@ -2897,6 +2850,27 @@ function copyAnki(){navigator.clipboard.writeText(document.getElementById('anki-
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
 renderCases();renderPearls();renderPrivate();
+
+// Read URL params — for iOS Shortcut integration
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const folioParam = params.get('folio');
+  if(folioParam && folioParam.length > 3){
+    // Switch to Bichita mode
+    setMode('bichita');
+    // Open the new sample modal after a short delay
+    setTimeout(()=>{
+      openScanner();
+      // Fill folio field
+      const inp = document.getElementById('inp-folio');
+      if(inp){ 
+        inp.value = folioParam; 
+        autoExtractDate(folioParam);
+      }
+      showToast('Folio recibido: ' + folioParam.slice(0,18));
+    }, 400);
+  }
+})();
 
 if(!cases.length){
   const d1={id:uid(),folio:'2604201053.241',exp:'0001419844',cama:'118 · Hosp.',mesa:'Hemocultivos',type:'Biliar',findings:[{day:1,text:'Botella positiva. Gram: bacilo GN',isPearl:false},{day:2,text:'MALDI-TOF: K. pneumoniae · ETP MIC 0.5 → pasa a mesa MICs ⚠️',isPearl:false}],pearls:[],status:'active',_open:true,createdAt:new Date().toISOString()};
