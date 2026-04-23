@@ -2643,15 +2643,30 @@ function parseOCRText(text){
   const hint = document.getElementById('scannerHint');
   const icon = document.getElementById('scanIcon');
 
+  console.log('OCR raw:', text);
+
   let folio = '', expediente = '';
 
-  // FOLIO: digits.digits pattern e.g. 2604140677.125
-  const folioMatch = text.match(/(\d{8,12}\.\d{2,4})/);
-  if(folioMatch) folio = folioMatch[1].trim();
+  // FOLIO: exactly 10 digits + dot + 3 digits e.g. 2604140677.125
+  // Use original text with spaces to find it (OCR usually keeps numbers together)
+  const fm = text.match(/\b(\d{10}\.\d{3})\b/);
+  if(fm) folio = fm[1];
 
-  // EXPEDIENTE: starts with leading zeros e.g. 0001419844
-  const expMatch = text.match(/(0{2,}\d{6,10})/);
-  if(expMatch) expediente = expMatch[1].trim();
+  // If not found with word boundary, try without (in case OCR merges chars)
+  if(!folio){
+    const nosp = text.replace(/\s/g,'');
+    const fm2 = nosp.match(/(\d{10}\.\d{3})/);
+    if(fm2) folio = fm2[1];
+  }
+
+  // EXPEDIENTE: 10 digit number starting with 00 e.g. 0001419844
+  const em = text.match(/\b(00\d{8})\b/);
+  if(em) expediente = em[1];
+  if(!expediente){
+    const nosp = text.replace(/\s/g,'');
+    const em2 = nosp.match(/(00\d{8})/);
+    if(em2) expediente = em2[1];
+  }
 
   // Fill fields
   if(folio){ document.getElementById('inp-folio').value = folio; autoExtractDate(folio); }
@@ -2667,7 +2682,7 @@ function parseOCRText(text){
     icon.textContent = '✅';
     showToast('Leído: ' + parts.join(', '));
   } else {
-    hint.textContent = 'No se detectaron datos — intenta de nuevo o ingresa manualmente';
+    hint.textContent = 'No detectado — intenta de nuevo o ingresa manualmente';
     icon.textContent = '⚠️';
     showToast('OCR sin resultados — intenta de nuevo');
   }
@@ -2680,7 +2695,7 @@ function startCamera(){ triggerOCR(); }
 function stopCamera(){ ocrRunning = false; }
 
 function autoExtractDate(val){
-  const digits = val.replace(/[^\d]/g,'');
+  const digits = val.replace(/[^0-9]/g,'');
   if(digits.length >= 6){
     const yy=digits.slice(0,2), mm=digits.slice(2,4), dd=digits.slice(4,6);
     const yyN=parseInt(yy), mmN=parseInt(mm), ddN=parseInt(dd);
@@ -2699,7 +2714,7 @@ function parseBC(raw){
   // Extract date from folio format YYMMDD...
   // Examples: 2604140677.125 -> YY=26 MM=04 DD=14 -> 14/04/2026
   //           2604201053.241 -> YY=26 MM=04 DD=20 -> 20/04/2026
-  const digits = clean.replace(/[^\d]/g, '');
+  const digits = clean.replace(/[^0-9]/g, '');
   if(digits.length >= 6){
     const yy = digits.slice(0,2);
     const mm = digits.slice(2,4);
