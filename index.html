@@ -2179,10 +2179,7 @@ main{padding:12px 16px 100px;max-width:600px;margin:0 auto}
         <label class="form-label">Número de expediente</label>
         <input class="form-input" id="inp-exp" placeholder="0001419844">
       </div>
-      <div class="form-group">
-        <label class="form-label">Nombre del paciente</label>
-        <input class="form-input" id="inp-nombre" placeholder="Apellidos Nombre">
-      </div>
+
       <div class="form-group">
         <label class="form-label">Cama / Servicio</label>
         <input class="form-input" id="inp-cama" placeholder="118 · Hospitalización">
@@ -2576,7 +2573,7 @@ if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentE
 
 function showTab(id,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+id).classList.add('active');if(id==='exportar'){generateExport();generateAnki()}}
 
-function openScanner(){document.getElementById('scannerModal').classList.add('open');['inp-folio','inp-exp','inp-nombre','inp-cama'].forEach(id=>document.getElementById(id).value='');selType='';document.querySelectorAll('.type-option').forEach(o=>o.classList.remove('selected'))}
+function openScanner(){document.getElementById('scannerModal').classList.add('open');['inp-folio','inp-exp','inp-cama','inp-fecha'].forEach(id=>document.getElementById(id).value='');selType='';document.querySelectorAll('.type-option').forEach(o=>o.classList.remove('selected'))}
 function closeScanner(){stopCamera();document.getElementById('scannerModal').classList.remove('open')}
 function selectType(el,t){document.querySelectorAll('.type-option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');selType=t}
 
@@ -2646,67 +2643,33 @@ function parseOCRText(text){
   const hint = document.getElementById('scannerHint');
   const icon = document.getElementById('scanIcon');
 
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  console.log('OCR lines:', lines);
+  let folio = '', expediente = '';
 
-  let folio = '', expediente = '', nombre = '';
-
-  // --- FOLIO: pattern XXXXXXXXXX.XXX (digits with dot) ---
-  // e.g. 2604140677.125 or 2604201053.241
-  const folioMatch = text.match(/\b(\d{8,12}\.\d{2,4})\b/);
+  // FOLIO: digits.digits pattern e.g. 2604140677.125
+  const folioMatch = text.match(/(\d{8,12}\.\d{2,4})/);
   if(folioMatch) folio = folioMatch[1].trim();
 
-  // --- EXPEDIENTE: 8-10 digit number, often first long number on label ---
-  // e.g. 0001419844 — appears before patient name
-  const expMatch = text.match(/\b(0{2,}\d{6,10})\b/);
+  // EXPEDIENTE: starts with leading zeros e.g. 0001419844
+  const expMatch = text.match(/(0{2,}\d{6,10})/);
   if(expMatch) expediente = expMatch[1].trim();
 
-  // --- NOMBRE: uppercase words after expediente, before date ---
-  // Pattern: line with 2-4 uppercase words that look like a name
-  // e.g. "GUADALUPE IVONNE ROMERO" or "MIGUEL DARIO MORALES"
-  const nombreMatch = text.match(/([A-Z]{2,}(?:\s+[A-Z]{2,}){1,3})/);
-  if(nombreMatch) {
-    const candidate = nombreMatch[1].trim();
-    // Filter out known non-name words
-    const exclude = ['HOSPITALIZACION','HOSPITALIZATION','ANAEROBIO','AEROBIO','BOTELLA','JERINGA','BILIAR'];
-    if(!exclude.some(w => candidate.includes(w))) {
-      nombre = candidate;
-    }
-  }
-
-  // --- DATE from folio (YYMMDD format) ---
-  let fechaStr = '';
-  if(folio){
-    const digits = folio.replace(/\D/g,'');
-    if(digits.length >= 6){
-      const yy = digits.slice(0,2), mm = digits.slice(2,4), dd = digits.slice(4,6);
-      const yyN = parseInt(yy), mmN = parseInt(mm), ddN = parseInt(dd);
-      if(yyN>=20 && yyN<=40 && mmN>=1 && mmN<=12 && ddN>=1 && ddN<=31){
-        fechaStr = dd+'/'+mm+'/20'+yy;
-      }
-    }
-  }
-
-  // Fill form fields
+  // Fill fields
   if(folio){ document.getElementById('inp-folio').value = folio; autoExtractDate(folio); }
   if(expediente) document.getElementById('inp-exp').value = expediente;
-  if(nombre) document.getElementById('inp-nombre').value = nombre;
 
-  // Build feedback message
+  // Feedback
   const parts = [];
   if(folio) parts.push('Folio ✓');
   if(expediente) parts.push('Exp ✓');
-  if(nombre) parts.push('Nombre ✓');
-  if(fechaStr) parts.push(fechaStr);
 
   if(parts.length > 0){
     hint.textContent = parts.join(' · ');
     icon.textContent = '✅';
-    showToast('Etiqueta leída: ' + parts.join(', '));
+    showToast('Leído: ' + parts.join(', '));
   } else {
-    hint.textContent = 'Sin datos detectados — revisa la foto o ingresa manualmente';
+    hint.textContent = 'No se detectaron datos — intenta de nuevo o ingresa manualmente';
     icon.textContent = '⚠️';
-    showToast('OCR no detectó datos — intenta de nuevo');
+    showToast('OCR sin resultados — intenta de nuevo');
   }
 
   ocrRunning = false;
@@ -2755,13 +2718,12 @@ function parseBC(raw){
 function saveCase(){
   const folio=document.getElementById('inp-folio').value.trim();
   const exp=document.getElementById('inp-exp').value.trim();
-  const nombre=document.getElementById('inp-nombre').value.trim();
   const cama=document.getElementById('inp-cama').value.trim();
   const fecha=document.getElementById('inp-fecha').value.trim();
   const mesa=document.getElementById('inp-mesa').value;
   if(!folio){showToast('Ingresa el folio');return}
   if(!selType){showToast('Selecciona el tipo de muestra');return}
-  cases.unshift({id:uid(),folio,exp,nombre,cama,fecha,mesa,type:selType,findings:[],pearls:[],status:'active',_open:true,createdAt:new Date().toISOString()});
+  cases.unshift({id:uid(),folio,exp,cama,fecha,mesa,type:selType,findings:[],pearls:[],status:'active',_open:true,createdAt:new Date().toISOString()});
   save();closeScanner();renderCases();showToast('Caso guardado: '+folio)
 }
 
@@ -2794,7 +2756,6 @@ function buildCard(c){
   let pr='';
   if(c.pearls&&c.pearls.length)pr='<div class="pearl-row">'+c.pearls.map(p=>`<span class="pearl-tag">★ ${esc(p.text.slice(0,50))}${p.text.length>50?'…':''}</span>`).join('')+'</div>';
   const meta=[];
-  if(c.nombre)meta.push(`<span class="meta-item"><span class="meta-dot"></span>${esc(c.nombre)}</span>`);
   if(c.fecha)meta.push(`<span class="meta-item"><span class="meta-dot" style="background:var(--accent)"></span>${esc(c.fecha)}</span>`);
   if(c.cama)meta.push(`<span class="meta-item"><span class="meta-dot"></span>Cama ${esc(c.cama)}</span>`);
   if(c.exp)meta.push(`<span class="meta-item"><span class="meta-dot"></span>Exp. ${esc(c.exp)}</span>`);
@@ -2894,7 +2855,7 @@ function generateExport(){
     mc.forEach(c=>{
       const last=c.findings[c.findings.length-1];
       const st=c.status==='closed'?'[CERRADO]':'[ACTIVO]';
-      const info=[c.type,c.nombre,c.cama?'Cama '+c.cama:''].filter(Boolean).join(' · ');
+      const info=[c.type,c.cama?'Cama '+c.cama:'',c.fecha?'Fecha: '+c.fecha:''].filter(Boolean).join(' · ');
       txt+=`• ${c.folio}${c.exp?' (Exp. '+c.exp+')':''} | ${info} ${st}\n`;
       if(last)txt+=`  → D${last.day}: ${last.text}\n`;
       if(c.pearls&&c.pearls.length)c.pearls.forEach(p=>{txt+=`  ★ ${p.text}\n`});
@@ -2916,11 +2877,11 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 renderCases();renderPearls();renderPrivate();
 
 if(!cases.length){
-  const d1={id:uid(),folio:'2604201053.241',exp:'0001419844',nombre:'Romero Guadalupe I.',cama:'118 · Hosp.',mesa:'Hemocultivos',type:'Biliar',findings:[{day:1,text:'Botella positiva. Gram: bacilo GN',isPearl:false},{day:2,text:'MALDI-TOF: K. pneumoniae · ETP MIC 0.5 → pasa a mesa MICs ⚠️',isPearl:false}],pearls:[],status:'active',_open:true,createdAt:new Date().toISOString()};
-  const d2={id:uid(),folio:'2604300872.105',exp:'0002871034',nombre:'García Roberto',cama:'204 · UCI',mesa:'MICs',type:'Hemocultivo',findings:[{day:2,text:'VITEK: K. oxytoca — regla experto activada',isPearl:false},{day:3,text:'Confirmación MALDI-TOF: Raoultella ornithinolytica',isPearl:true}],status:'active',createdAt:new Date().toISOString()};
+  const d1={id:uid(),folio:'2604201053.241',exp:'0001419844',cama:'118 · Hosp.',mesa:'Hemocultivos',type:'Biliar',findings:[{day:1,text:'Botella positiva. Gram: bacilo GN',isPearl:false},{day:2,text:'MALDI-TOF: K. pneumoniae · ETP MIC 0.5 → pasa a mesa MICs ⚠️',isPearl:false}],pearls:[],status:'active',_open:true,createdAt:new Date().toISOString()};
+  const d2={id:uid(),folio:'2604300872.105',exp:'0002871034',cama:'204 · UCI',mesa:'MICs',type:'Hemocultivo',findings:[{day:2,text:'VITEK: K. oxytoca — regla experto activada',isPearl:false},{day:3,text:'Confirmación MALDI-TOF: Raoultella ornithinolytica',isPearl:true}],status:'active',createdAt:new Date().toISOString()};
   const p1={id:uid(),text:'VITEK confunde K. oxytoca con Raoultella ornithinolytica. Confirmar siempre con MALDI-TOF.',micro:'Klebsiella oxytoca / Raoultella',folio:'2604300872.105',mesa:'MICs',date:new Date().toISOString()};
   d2.pearls=[p1];pearls=[p1];
-  const d3={id:uid(),folio:'2604188920.033',exp:'0003102988',nombre:'López Fernanda',cama:'056 · Hosp.',mesa:'Bacteriología',type:'Absceso',findings:[{day:1,text:'Cultivo polimicrobiano en siembra inicial',isPearl:false}],pearls:[],status:'active',createdAt:new Date().toISOString()};
+  const d3={id:uid(),folio:'2604188920.033',exp:'0003102988',cama:'056 · Hosp.',mesa:'Bacteriología',type:'Absceso',findings:[{day:1,text:'Cultivo polimicrobiano en siembra inicial',isPearl:false}],pearls:[],status:'active',createdAt:new Date().toISOString()};
   cases=[d1,d2,d3];save();renderCases();renderPearls();
 }
 
