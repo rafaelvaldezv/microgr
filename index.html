@@ -2,10 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MicroGuía — Pase de Visita</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Asa — Microbiología Clínica</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23111827'/%3E%3Crect x='46' y='58' width='8' height='32' rx='4' fill='%23e5e7eb'/%3E%3Crect x='46' y='58' width='8' height='14' rx='4' fill='%230f9e75'/%3E%3Crect x='47' y='50' width='6' height='12' rx='3' fill='%230f9e75'/%3E%3Ccircle cx='50' cy='40' r='13' fill='none' stroke='%230f9e75' stroke-width='5'/%3E%3Crect x='44' y='49' width='12' height='8' fill='%23111827'/%3E%3C/svg%3E">
+<script src="https://unpkg.com/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+
 :root {
   --bg: #f7f8fa;
   --bg2: #ffffff;
@@ -230,36 +233,225 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
 
 .bottom-note { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg2); border-top: 1px solid var(--border); padding: 10px 16px; font-size: 11px; color: var(--text3); text-align: center; }
 .hidden { display: none !important; }
+
+
+:root{--bg:#f7f8fa;--bg2:#fff;--bg3:#eef0f4;--border:#e2e5ec;--text:#0f1923;--text2:#4a5568;--text3:#8a95a3;--accent:#1a56a0;--accent2:#e8f0fb;--accent3:#2d6cc4;--danger:#c0392b;--danger-bg:#fdf0ef;--warn:#b7610a;--warn-bg:#fef5e7;--success:#1a6b3c;--success-bg:#edf7f1;--amber:#b7610a;--amber-bg:#fef5e7;--purple:#6d28d9;--purple-bg:#ede9fe}
+[data-theme="dark"]{--bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--border:#2a3140;--text:#e6edf3;--text2:#9baab8;--text3:#5a6a7a;--accent:#4d8fd6;--accent2:#162033;--accent3:#6aa3e0;--danger:#f07070;--danger-bg:#2a1515;--warn:#e8a24a;--warn-bg:#251a0a;--success:#4caf7a;--success-bg:#0d2018;--amber:#e8a24a;--amber-bg:#251a0a;--purple:#a78bfa;--purple-bg:#2d1f5e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);font-size:15px;min-height:100vh}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:8px}
+.logo{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.app-name{font-size:17px;font-weight:600;color:var(--text)}
+.app-date{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.04em}
+.header-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--text2);cursor:pointer;font-family:'Outfit',sans-serif;font-weight:500;transition:all 0.15s}
+.icon-btn:hover{background:var(--border)}
+.icon-btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 14px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.15s;flex-shrink:0}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+main{padding:12px 16px 100px;max-width:600px;margin:0 auto}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center}
+.stat-num{font-size:22px;font-weight:600;color:var(--text);line-height:1}
+.stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+.mesa-header{display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px}
+.mesa-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--text3)}
+.mesa-count{font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1px 8px;color:var(--text3)}
+.sample-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:all 0.15s}
+.sample-card.bd{border-left:3px solid var(--danger)}
+.sample-card.bw{border-left:3px solid var(--warn)}
+.sample-card.bs{border-left:3px solid var(--success)}
+.sample-card.ba{border-left:3px solid var(--amber)}
+.card-header{padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.card-folio{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--text);flex:1}
+.card-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.type-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.03em}
+.th{background:var(--danger-bg);color:var(--danger)}
+.to{background:var(--accent2);color:var(--accent3)}
+.tab2{background:var(--warn-bg);color:var(--warn)}
+.tb{background:var(--success-bg);color:var(--success)}
+.tbi{background:var(--amber-bg);color:var(--amber)}
+.tl{background:#fdf4ff;color:#7c3aed}
+.tx{background:var(--bg3);color:var(--text2)}
+.card-body{border-top:1px solid var(--border);padding:10px 12px;display:none}
+.sample-card.open .card-body{display:block}
+.card-meta{font-size:12px;color:var(--text2);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:4px}
+.meta-dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
+.timeline{margin:8px 0}
+.tl-item{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0}
+.tl-day{font-size:10px;color:var(--text3);font-weight:500;line-height:1;margin-bottom:2px}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tl-line{width:1px;background:var(--border);flex:1;min-height:10px;margin-top:2px}
+.ddone{background:var(--success)}
+.dactive{background:var(--warn)}
+.dpending{background:var(--border)}
+.tl-content{flex:1}
+.tl-text{font-size:12px;color:var(--text2);line-height:1.4}
+.tl-text.active{color:var(--text);font-weight:500}
+.pearl-row{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 0}
+.pearl-tag{display:inline-flex;align-items:center;gap:4px;background:var(--amber-bg);color:var(--amber);font-size:11px;padding:3px 8px;border-radius:10px;border:1px solid rgba(183,97,10,0.2)}
+.card-actions{display:flex;gap:6px;margin-top:10px;border-top:1px solid var(--border);padding-top:8px}
+.act-btn{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 2px;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;text-align:center;font-family:'Outfit',sans-serif;transition:all 0.15s}
+.act-btn:hover{background:var(--border);color:var(--text)}
+.act-btn.adanger{color:var(--danger)}
+.act-btn.asuccess{color:var(--success)}
+.act-btn.aamber{color:var(--amber)}
+.pearl-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:3px solid var(--amber)}
+.pearl-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.pearl-card-text{font-size:13px;color:var(--text);font-weight:500;flex:1;line-height:1.4}
+.pearl-card-meta{font-size:11px;color:var(--text3);flex-shrink:0}
+.pearl-micro{display:inline-block;font-size:10px;background:var(--accent2);color:var(--accent3);padding:2px 7px;border-radius:8px;margin-bottom:4px;font-style:italic}
+.pearl-actions{display:flex;gap:6px;margin-top:8px}
+.pearl-act{font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--text2);font-family:'Outfit',sans-serif;transition:all 0.15s}
+.pearl-act:hover{background:var(--border)}
+.private-note{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:3px solid var(--purple)}
+.private-note-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.private-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--purple)}
+.private-note-text{font-size:13px;color:var(--text);line-height:1.5}
+.private-note-time{font-size:10px;color:var(--text3)}
+.export-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.export-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px}
+.export-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--text);min-height:200px;resize:none;outline:none;line-height:1.6}
+.export-actions{display:flex;gap:8px;margin-top:10px}
+.exp-btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;border:1px solid var(--border);transition:all 0.15s}
+.exp-btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.exp-btn.secondary{background:var(--bg3);color:var(--text2)}
+.exp-btn:hover{opacity:0.88}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:flex-end;justify-content:center;padding:0}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border-radius:16px 16px 0 0;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
+.modal-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:10}
+.modal-title{font-size:15px;font-weight:600;color:var(--text)}
+.modal-close{background:var(--bg3);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:16px}
+.scanner-area{background:var(--bg3);border:2px dashed var(--border);border-radius:12px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;position:relative;overflow:hidden;cursor:pointer}
+.scanner-area video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:10px}
+.scanner-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;flex-direction:column;gap:8px}
+.scanner-frame{width:180px;height:50px;border:2px solid var(--accent);border-radius:4px}
+.scanner-icon{font-size:28px;color:var(--text3)}
+.scanner-hint{font-size:12px;color:var(--text3);text-align:center}
+.form-group{margin-bottom:12px}
+.form-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text3);margin-bottom:5px;display:block}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;transition:border 0.15s}
+.form-input:focus{border-color:var(--accent)}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.type-option{border:1px solid var(--border);border-radius:8px;padding:7px 4px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;transition:all 0.15s;color:var(--text2);background:var(--bg3)}
+.type-option:hover{border-color:var(--accent);color:var(--accent);background:var(--accent2)}
+.type-option.selected{border-color:var(--accent);color:var(--accent);background:var(--accent2);font-weight:600}
+.modal-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;position:sticky;bottom:0;background:var(--bg2)}
+.modal-btn{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;border:1px solid var(--border);transition:all 0.15s}
+.modal-btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.modal-btn.secondary{background:var(--bg3);color:var(--text2)}
+.finding-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;outline:none;min-height:80px;resize:none;transition:border 0.15s}
+.finding-textarea:focus{border-color:var(--accent)}
+.checkbox-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);cursor:pointer;padding:4px 0}
+.checkbox-row input{width:16px;height:16px;cursor:pointer;accent-color:var(--amber)}
+.empty-state{text-align:center;padding:32px 20px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.empty-text{font-size:14px;font-weight:500;color:var(--text2);margin-bottom:4px}
+.empty-sub{font-size:12px}
+.bottom-note{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:8px 16px 10px;font-size:11px;color:var(--text3);text-align:center;z-index:100}
+.toast{position:fixed;bottom:52px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg2);padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:1000;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.section{display:none}
+.section.active{display:block}
+.closed-badge{font-size:10px;background:var(--success-bg);color:var(--success);padding:1px 6px;border-radius:8px;margin-left:6px;vertical-align:middle}
+.add-note-row{display:flex;gap:8px;margin-bottom:14px;align-items:flex-end}
+
+
+/* ── ASA SHELL ── */
+.asa-topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.asa-brand { display: flex; align-items: center; gap: 9px; }
+.asa-icon-wrap {
+  width: 32px; height: 32px;
+  background: #111827;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.asa-wordmark { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: 0.5px; line-height: 1; }
+.asa-sub { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.asa-right { display: flex; align-items: center; gap: 8px; }
+.asa-theme-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.15s;
+}
+
+/* ── ANTIBIOGRAM PILLS ── */
+.abx-group-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin: 14px 0 5px 2px; }
+.abx-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 5px; }
+.abx-name { font-size: 13px; color: var(--text); flex: 1; min-width: 0; line-height: 1.3; padding-top: 2px; }
+.abx-name small { display: block; font-size: 11px; color: var(--text3); margin-top: 2px; }
+.abx-pills { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; max-width: 55%; }
+.mic-pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; font-family: 'DM Mono', monospace; line-height: 1.4; }
+.mic-s  { background: var(--success-bg); color: var(--success); }
+.mic-i  { background: var(--warn-bg);    color: var(--warn); }
+.mic-r  { background: var(--danger-bg);  color: var(--danger); }
+.mic-sdd{ background: var(--accent2);    color: var(--accent3); }
+.mic-na { background: var(--bg3);        color: var(--text3); }
+.abx-legend { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; font-size: 11px; color: var(--text3); }
+.abx-legend span { display: flex; align-items: center; gap: 3px; }
+.abx-source { font-size: 10px; color: var(--text3); border: 1px dashed var(--border); border-radius: 8px; padding: 5px 9px; margin-top: 10px; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <div class="logo-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-        <circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" stroke-dasharray="3 2"/>
-        <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
-        <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+<!-- ═══ ASA TOP BAR ═══ -->
+<div class="asa-topbar">
+  <div class="asa-brand">
+    <div class="asa-icon-wrap">
+      <svg width="20" height="20" viewBox="0 0 20 20">
+        <rect x="8" y="12" width="4" height="7" rx="2" fill="#e5e7eb"/>
+        <rect x="8" y="12" width="4" height="3.5" rx="1.5" fill="#0f9e75"/>
+        <rect x="8.5" y="9" width="3" height="5" rx="1.5" fill="#0f9e75"/>
+        <circle cx="10" cy="6.5" r="3.5" fill="none" stroke="#0f9e75" stroke-width="2"/>
+        <rect x="7.5" y="9.5" width="5" height="2.5" fill="#111827"/>
       </svg>
     </div>
     <div>
-      <div class="app-title">MicroGuía</div>
-      <div class="app-sub">Pase de visita · Microbiología</div>
+      <div class="asa-wordmark">asa</div>
+      <div class="asa-sub" id="asaSub">Guía · microbiología clínica</div>
+      <div class="asa-sub" id="headerDate"></div>
     </div>
   </div>
-  <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙 Oscuro</button>
+  <div class="asa-right">
+    <button class="asa-theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+  </div>
 </div>
 
-<div class="nav-tabs">
+<!-- ═══ GUÍA MODE ═══ -->
+
+  <div class="nav-tabs" id="guia-nav">
   <div class="nav-tab" onclick="showSection('basica', this)">🔬 Micro Básica</div>
   <div class="nav-tab active" onclick="showSection('gram-neg', this)">Gram negativos</div>
   <div class="nav-tab" onclick="showSection('gram-pos', this)">Gram positivos</div>
   <div class="nav-tab" onclick="showSection('hongos', this)">🍄 Hongos</div>
   <div class="nav-tab" onclick="showSection('micobacterias', this)">Micobacterias</div>
 </div>
-
-<div class="search-bar">
+  <div class="search-bar">
   <input class="search-input" type="text" placeholder="Buscar microorganismo, antibiótico, resistencia…" id="searchInput" oninput="filterCards(this.value)">
 </div>
 
@@ -346,28 +538,39 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
       <div class="alert alert-info"><span class="alert-icon">💡</span><span>En México, MALDI-TOF disponible en hospitales de 3er nivel (IMSS CMN, ISSSTE, SSa Hospitales Regionales, INSP).</span></div>
     </div>
     <div class="panel" data-panel="abx">
-      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>Siempre interpretar el antibiograma en contexto clínico. Puntos de corte: <strong>CLSI M100-Ed36 (2026)</strong> — Enterobacterales (excl. Salmonella y Shigella).</span></div>
-      <table class="mini-table">
-        <tr><th>Antibiótico</th><th>CMI S / I / R (µg/mL)</th><th>Nota clínica</th></tr>
-        <tr><td>Ampicilina</td><td class="mono">≤8 / — / ≥32</td><td><span class="r-var">Variable (BLEE frecuente)</span></td></tr>
-        <tr><td>Amox-clavulanato (oral)</td><td class="mono">≤8/4 / 16/8 / ≥32/16</td><td><span class="r-s">Solo ITU no complicada</span></td></tr>
-        <tr><td>Amp-sulbactam</td><td class="mono">≤8/4 / 16/8 / ≥32/16</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Pip-tazobactam</td><td class="mono">≤8/4 (S) / 16/4 (SDD) / ≥32/4 (R)</td><td><span class="r-var">SDD: evaluar dosis altas / infusión extendida</span></td></tr>
-        <tr><td>Ceftriaxona</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">S si no BLEE</span></td></tr>
-        <tr><td>Ceftazidima</td><td class="mono">≤4 / 8 / ≥16</td><td><span class="r-s">S si no BLEE</span></td></tr>
-        <tr><td>Cefepima</td><td class="mono">≤2 (S) / 4-8 (SDD) / ≥16 (R)</td><td><span class="r-warn">Suprimir si carbapenemasa +</span></td></tr>
-        <tr><td>Ceftazidima-avibactam</td><td class="mono">≤8/4 / — / ≥16/4</td><td><span class="r-s">KPC, OXA-48</span></td></tr>
-        <tr><td>Aztreonam-avibactam ⭐</td><td class="mono">≤4/4 / 8/4 / ≥16/4</td><td><span class="r-s">NUEVO Ed36: NDM + OXA-48 (MBL)</span></td></tr>
-        <tr><td>Ertapenem</td><td class="mono">≤0.5 / 1 / ≥2</td><td><span class="r-s">1ra línea BLEE sin bacteriemia</span></td></tr>
-        <tr><td>Imipenem</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">S si KPC−</span></td></tr>
-        <tr><td>Meropenem</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">BLEE + bacteriemia grave</span></td></tr>
-        <tr><td>Meropenem-vaborbactam</td><td class="mono">≤4/8 / 8/8 / ≥16/8</td><td><span class="r-warn">Suprimir si OXA-48 detectada</span></td></tr>
-        <tr><td>Ciprofloxacino</td><td class="mono">≤0.25 / 0.5 / ≥1</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Levofloxacino</td><td class="mono">≤0.5 / 1 / ≥2</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Amikacina</td><td class="mono">≤16 / — / ≥64</td><td><span class="r-s">S habitual</span></td></tr>
-        <tr><td>TMP-SMX</td><td class="mono">≤2/38 / — / ≥4/76</td><td><span class="r-var">Variable</span></td></tr>
-      </table>
-      <div class="clsi-note">⭐ Aztreonam-avibactam: nuevo en CLSI M100-Ed36 (enero 2026) para Enterobacterales MDR, especialmente productoras de MBL (NDM). CMI = concentración mínima inhibitoria. SDD = Susceptible-Dosis Dependiente.</div>
+      <div class="abx-legend">
+        CMI (µg/mL):
+        <span><span class="mic-pill mic-s">S ≤X</span></span>
+        <span><span class="mic-pill mic-sdd">SDD X</span></span>
+        <span><span class="mic-pill mic-i">I X</span></span>
+        <span><span class="mic-pill mic-r">R ≥X</span></span>
+        <span><span class="mic-pill mic-na">—</span> sin BP</span>
+      </div>
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>Interpretar siempre en contexto clínico. CLSI M100-Ed36 (2026) · Enterobacterales (excl. Salmonella y Shigella).</span></div>
+
+      <p class="abx-group-label">β-lactámicos</p>
+      <div class="abx-row"><div class="abx-name">Ampicilina</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+      <div class="abx-row"><div class="abx-name">Amox-clavulanato (oral)<small>Solo ITU no complicada</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-i">I 16/8</span><span class="mic-pill mic-r">R ≥32/16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Pip-tazobactam</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-sdd">SDD 16/4</span><span class="mic-pill mic-r">R ≥32/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftriaxona</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftazidima</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-i">I 8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefepima<small>Suprimir si carbapenemasa +</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-sdd">SDD 4–8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftazidima-avibactam<small>KPC, OXA-48</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Aztreonam-avibactam ⭐<small>NUEVO Ed36 · NDM + OXA-48</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/4</span><span class="mic-pill mic-i">I 8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+
+      <p class="abx-group-label">Carbapenémicos</p>
+      <div class="abx-row"><div class="abx-name">Ertapenem<small>1ra línea BLEE sin bacteriemia</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Imipenem</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem<small>BLEE + bacteriemia grave</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem-vaborbactam<small>Suprimir si OXA-48</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/8</span><span class="mic-pill mic-i">I 8/8</span><span class="mic-pill mic-r">R ≥16/8</span></div></div>
+
+      <p class="abx-group-label">Fluoroquinolonas / Aminoglucósidos / Otros</p>
+      <div class="abx-row"><div class="abx-name">Ciprofloxacino</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-i">I 0.5</span><span class="mic-pill mic-r">R ≥1</span></div></div>
+      <div class="abx-row"><div class="abx-name">Levofloxacino</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Amikacina</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤16</span><span class="mic-pill mic-r">R ≥64</span></div></div>
+      <div class="abx-row"><div class="abx-name">TMP-SMX</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2/38</span><span class="mic-pill mic-r">R ≥4/76</span></div></div>
+
+      <div class="abx-source">⭐ Aztreonam-avibactam: nuevo en Ed36 para NDM. SDD = Susceptible-Dosis Dependiente. CLSI M100-Ed36 (2026)</div>
     </div>
     <div class="panel" data-panel="resist">
       <div class="resist-card resist-mdr">
@@ -466,25 +669,30 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
       <div class="algo-step"><div class="algo-num">4</div><div class="algo-content"><strong>MALDI-TOF / VITEK 2</strong><span>Confirmación definitiva. Si CMI carbapenémicos elevada → solicitar carbapenemasas (PCR).</span></div></div>
     </div>
     <div class="panel" data-panel="abx">
-      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span><em>K. pneumoniae</em> es el principal portador de KPC en LATAM. Verificar siempre sensibilidad a carbapenémicos.</span></div>
-      <table class="mini-table">
-        <tr><th>Antibiótico</th><th>CMI S / I / R (µg/mL)</th><th>Nota clínica</th></tr>
-        <tr><td>Ampicilina</td><td class="mono">—</td><td><span class="r-r">Resistente natural (intrínseca)</span></td></tr>
-        <tr><td>Pip-tazobactam</td><td class="mono">≤8/4 (S) / 16/4 (SDD) / ≥32/4 (R)</td><td><span class="r-var">Variable si BLEE/KPC</span></td></tr>
-        <tr><td>Ceftriaxona</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-var">Variable (BLEE muy común)</span></td></tr>
-        <tr><td>Cefepima</td><td class="mono">≤2 (S) / 4-8 (SDD) / ≥16 (R)</td><td><span class="r-warn">Suprimir si carbapenemasa +</span></td></tr>
-        <tr><td>Ceftazidima-avibactam</td><td class="mono">≤8/4 / — / ≥16/4</td><td><span class="r-s">KPC, OXA-48</span></td></tr>
-        <tr><td>Aztreonam-avibactam ⭐</td><td class="mono">≤4/4 / 8/4 / ≥16/4</td><td><span class="r-s">NUEVO Ed36: NDM + KPC + OXA-48</span></td></tr>
-        <tr><td>Imipenem-relebactam</td><td class="mono">≤1/4 / 2/4 / ≥4/4</td><td><span class="r-s">KPC (no cubre NDM ni OXA-48)</span></td></tr>
-        <tr><td>Meropenem-vaborbactam</td><td class="mono">≤4/8 / 8/8 / ≥16/8</td><td><span class="r-warn">Suprimir si OXA-48 detectada</span></td></tr>
-        <tr><td>Ertapenem</td><td class="mono">≤0.5 / 1 / ≥2</td><td><span class="r-s">S si KPC−. No cubre Pseudomonas.</span></td></tr>
-        <tr><td>Imipenem</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">S si KPC−</span></td></tr>
-        <tr><td>Meropenem</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">S si KPC−</span></td></tr>
-        <tr><td>Amikacina</td><td class="mono">≤16 / — / ≥64</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Ciprofloxacino</td><td class="mono">≤0.25 / 0.5 / ≥1</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Colistina / Polimixina B</td><td class="mono">≤2 / — / ≥4</td><td><span class="r-warn">⚠️ Eficacia limitada. Solo combinación + infectólogo.</span></td></tr>
-      </table>
-      <div class="clsi-note">⭐ Aztreonam-avibactam: NUEVO en CLSI M100-Ed36 (enero 2026). Para KPC-Kp con NDM coexistente, combinación AZA es clave. CLSI advierte: colistina/polimixina B tienen eficacia clínica limitada incluso si CMI ≤2.</div>
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-sdd">SDD X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span><em>K. pneumoniae</em> es el principal portador de KPC en LATAM. Verificar sensibilidad a carbapenémicos siempre.</span></div>
+
+      <p class="abx-group-label">β-lactámicos</p>
+      <div class="abx-row"><div class="abx-name">Ampicilina</div><div class="abx-pills"><span class="mic-pill mic-r">R intrínseca</span></div></div>
+      <div class="abx-row"><div class="abx-name">Pip-tazobactam</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-sdd">SDD 16/4</span><span class="mic-pill mic-r">R ≥32/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftriaxona</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefepima<small>Suprimir si carbapenemasa +</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-sdd">SDD 4–8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftazidima-avibactam<small>KPC, OXA-48</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Aztreonam-avibactam ⭐<small>NUEVO Ed36 · NDM + KPC + OXA-48</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/4</span><span class="mic-pill mic-i">I 8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Imipenem-relebactam<small>KPC (no cubre NDM ni OXA-48)</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1/4</span><span class="mic-pill mic-i">I 2/4</span><span class="mic-pill mic-r">R ≥4/4</span></div></div>
+
+      <p class="abx-group-label">Carbapenémicos</p>
+      <div class="abx-row"><div class="abx-name">Ertapenem<small>S si KPC−. No cubre Pseudomonas.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Imipenem</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem-vaborbactam<small>Suprimir si OXA-48 detectada</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/8</span><span class="mic-pill mic-i">I 8/8</span><span class="mic-pill mic-r">R ≥16/8</span></div></div>
+
+      <p class="abx-group-label">Otros</p>
+      <div class="abx-row"><div class="abx-name">Amikacina</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤16</span><span class="mic-pill mic-r">R ≥64</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ciprofloxacino</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-i">I 0.5</span><span class="mic-pill mic-r">R ≥1</span></div></div>
+      <div class="abx-row"><div class="abx-name">Colistina / Polimixina B<small>⚠️ Eficacia clínica limitada. Solo combinación.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+
+      <div class="abx-source">⭐ Aztreonam-avibactam: nuevo en Ed36. CLSI M100-Ed36 (2026) · CMI en µg/mL</div>
     </div>
     <div class="panel" data-panel="resist">
       <div class="resist-card resist-mdr">
@@ -580,26 +788,31 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
       <div class="algo-step"><div class="algo-num">4</div><div class="algo-content"><strong>MALDI-TOF / VITEK 2</strong><span>Confirmación definitiva. Solicitar Sensititre completo en sospecha de MDR-Pa.</span></div></div>
     </div>
     <div class="panel" data-panel="abx">
-      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>Puntos de corte <strong>específicos para P. aeruginosa</strong>. CLSI M100-Ed36 (2026) Tabla 2B-1. Ertapenem NO cubre Pseudomonas (resistencia intrínseca).</span></div>
-      <table class="mini-table">
-        <tr><th>Antibiótico</th><th>CMI S / I / R (µg/mL)</th><th>Rol clínico</th></tr>
-        <tr><td>Pip-tazobactam</td><td class="mono">≤16/4 / 32/4 / ≥64/4</td><td><span class="r-s">1ra línea si sensible</span></td></tr>
-        <tr><td>Ceftazidima</td><td class="mono">≤8 / 16 / ≥32</td><td><span class="r-s">Anti-pseudomónico clásico</span></td></tr>
-        <tr><td>Cefepima</td><td class="mono">≤8 / 16 / ≥32</td><td><span class="r-s">Anti-pseudomónico</span></td></tr>
-        <tr><td>Ceftazidima-avibactam</td><td class="mono">≤8/4 / — / ≥16/4</td><td><span class="r-s">MDR-Pa KPC; NO cubre MBL (VIM/IMP)</span></td></tr>
-        <tr><td>Ceftolozano-tazobactam</td><td class="mono">≤4/4 / 8/4 / ≥16/4</td><td><span class="r-s">MDR-Pa AmpC hiper-producida</span></td></tr>
-        <tr><td>Imipenem-relebactam</td><td class="mono">≤2/4 / 4/4 / ≥8/4</td><td><span class="r-s">MDR-Pa; actividad vs KPC</span></td></tr>
-        <tr><td>Aztreonam</td><td class="mono">≤8 / 16 / ≥32</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Imipenem</td><td class="mono">≤2 / 4 / ≥8</td><td><span class="r-var">Variable (pérdida OprD → solo imipenem R)</span></td></tr>
-        <tr><td>Meropenem</td><td class="mono">≤2 / 4 / ≥8</td><td><span class="r-s">Elección en infección grave</span></td></tr>
-        <tr><td>Ciprofloxacino</td><td class="mono">≤0.5 / 1 / ≥2</td><td><span class="r-var">Variable (mutaciones gyrA)</span></td></tr>
-        <tr><td>Levofloxacino</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Tobramicina</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">Combinación; no predice gentamicina</span></td></tr>
-        <tr><td>Amikacina (urocultivo)</td><td class="mono">≤16 / 32 / ≥64</td><td><span class="r-s">Solo orina (CLSI Ed36)</span></td></tr>
-        <tr><td>Cefiderocol</td><td class="mono">≤4 / 8 / ≥16</td><td><span class="r-s">XDR/PDR-Pa; precaución en hierro</span></td></tr>
-        <tr><td>Colistina / Polimixina B</td><td class="mono">≤2 / — / ≥4</td><td><span class="r-warn">⚠️ CLSI: eficacia limitada. Solo combinación.</span></td></tr>
-      </table>
-      <div class="clsi-note">CLSI M100-Ed36 2026 Tabla 2B-1. Amikacina: solo reportar en urocultivos (Tabla 2B-1 Ed36). Dosis de referencia: Pip-tazo 4.5g c/6h; Meropenem 1g c/8h (infusión extendida 3h para MDR).</div>
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-sdd">SDD X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>Puntos de corte <strong>específicos para P. aeruginosa</strong>. Tabla 2B-1 Ed36. Ertapenem NO cubre Pseudomonas.</span></div>
+
+      <p class="abx-group-label">β-lactámicos anti-pseudomónicos</p>
+      <div class="abx-row"><div class="abx-name">Pip-tazobactam<small>1ra línea si sensible</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤16/4</span><span class="mic-pill mic-i">I 32/4</span><span class="mic-pill mic-r">R ≥64/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftazidima</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8</span><span class="mic-pill mic-i">I 16</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefepima</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8</span><span class="mic-pill mic-i">I 16</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftazidima-avibactam<small>MDR-Pa KPC; NO cubre MBL</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftolozano-tazobactam<small>MDR-Pa AmpC hiper-producida</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/4</span><span class="mic-pill mic-i">I 8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Imipenem-relebactam<small>MDR-Pa con KPC</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2/4</span><span class="mic-pill mic-i">I 4/4</span><span class="mic-pill mic-r">R ≥8/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Aztreonam<small>Variable</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8</span><span class="mic-pill mic-i">I 16</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+
+      <p class="abx-group-label">Carbapenémicos</p>
+      <div class="abx-row"><div class="abx-name">Imipenem<small>Variable — pérdida OprD</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem<small>Elección en infección grave</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+
+      <p class="abx-group-label">Fluoroquinolonas / Aminoglucósidos / Otros</p>
+      <div class="abx-row"><div class="abx-name">Ciprofloxacino</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Levofloxacino</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Tobramicina</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Amikacina<small>Solo urocultivos (Ed36)</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤16</span><span class="mic-pill mic-i">I 32</span><span class="mic-pill mic-r">R ≥64</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefiderocol<small>XDR/PDR-Pa</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-i">I 8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Colistina / Polimixina B<small>⚠️ Eficacia limitada. Solo combinación.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+
+      <div class="abx-source">CLSI M100-Ed36 (2026) · Tabla 2B-1 · CMI en µg/mL · Imipenem-R ≠ meropenem-R (mecanismo OprD)</div>
     </div>
     <div class="panel" data-panel="resist">
       <div class="resist-card resist-info">
@@ -690,22 +903,30 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
       <div class="alert alert-info"><span class="alert-icon">💡</span><span>A. baumannii es el más virulento y MDR del género. Ambiente hospitalario exclusivo: UCI, VM, quemados, inmunocomprometidos.</span></div>
     </div>
     <div class="panel" data-panel="abx">
-      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>Tasa de resistencia a carbapenémicos en México >50% en UCI. CLSI M100-Ed36 (2026) revisó puntos de corte de amikacina, gentamicina y tobramicina para Acinetobacter spp. (Tabla 2B-2).</span></div>
-      <table class="mini-table">
-        <tr><th>Antibiótico</th><th>CMI S / I / R (µg/mL)</th><th>Nota clínica Ed36</th></tr>
-        <tr><td>Ampicilina-sulbactam</td><td class="mono">≤8/4 / 16/8 / ≥32/16</td><td><span class="r-var">Sulbactam activo por sí solo vs Ab. Dosis alta: sulbactam 6g+/día</span></td></tr>
-        <tr><td>Sulbactam-durlobactam ⭐</td><td class="mono">≤4/4 / 8/8 / ≥16/16</td><td><span class="r-s">Ed36: tier 3. 2g c/6h IV x3h. Para CRAB susceptible.</span></td></tr>
-        <tr><td>Imipenem</td><td class="mono">≤2 / 4 / ≥8</td><td><span class="r-var">Variable (OXA-carbapenemasas)</span></td></tr>
-        <tr><td>Meropenem</td><td class="mono">≤2 / 4 / ≥8</td><td><span class="r-var">Variable (OXA-23 frecuente en México)</span></td></tr>
-        <tr><td>Cefiderocol</td><td class="mono">≤1 / — / ≥4</td><td><span class="r-s">XDR/PDR-Ab; solo complejo A. baumannii</span></td></tr>
-        <tr><td>Amikacina ⭐</td><td class="mono">≤8 / 16 / ≥32</td><td><span class="r-warn">REVISADO Ed36 (antes ≤16/≥64). Dosis: 20mg/kg c/24h</span></td></tr>
-        <tr><td>Gentamicina ⭐</td><td class="mono">≤2 / 4 / ≥8</td><td><span class="r-warn">REVISADO Ed36. Dosis: 7mg/kg c/24h</span></td></tr>
-        <tr><td>Tobramicina ⭐</td><td class="mono">≤2 / 4 / ≥8</td><td><span class="r-warn">REVISADO Ed36. Dosis: 7mg/kg c/24h</span></td></tr>
-        <tr><td>Minociclina</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">Útil en MDR-Ab. 200mg IV/PO c/12h. Confirmar CMI si zona 18-21mm.</span></td></tr>
-        <tr><td>Ciprofloxacino</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-r">Frecuentemente resistente en CRAB</span></td></tr>
-        <tr><td>Colistina / Polimixina B</td><td class="mono">≤2 / — / ≥4</td><td><span class="r-warn">⚠️ CLSI: eficacia limitada incluso si S. Solo en combinación.</span></td></tr>
-      </table>
-      <div class="clsi-note">⭐ Cambios en Ed36 (2026): amikacina, gentamicina y tobramicina para Acinetobacter spp. con puntos de corte REVISADOS (más estrictos). Sulbactam-durlobactam reubicado en tier 3. CMI = concentración mínima inhibitoria.</div>
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>Resistencia a carbapenémicos en México >50% en UCI. Solicitar genotipificación. Tabla 2B-2 Ed36.</span></div>
+
+      <p class="abx-group-label">β-lactámicos / Sulfonamidas</p>
+      <div class="abx-row"><div class="abx-name">Ampicilina-sulbactam<small>Sulbactam activo por sí solo. Dosis alta: 6–9g/día</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-i">I 16/8</span><span class="mic-pill mic-r">R ≥32/16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Sulbactam-durlobactam ⭐<small>Ed36 tier 3 · 2g c/6h IV x3h · CRAB susceptible</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/4</span><span class="mic-pill mic-i">I 8/8</span><span class="mic-pill mic-r">R ≥16/16</span></div></div>
+
+      <p class="abx-group-label">Carbapenémicos</p>
+      <div class="abx-row"><div class="abx-name">Imipenem<small>Variable (OXA-carbapenemasas)</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem<small>Variable (OXA-23 frecuente)</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+
+      <p class="abx-group-label">Aminoglucósidos ⭐ BP revisados Ed36</p>
+      <div class="abx-row"><div class="abx-name">Amikacina<small>⭐ REVISADO: antes ≤16. Dosis: 20mg/kg c/24h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8</span><span class="mic-pill mic-i">I 16</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+      <div class="abx-row"><div class="abx-name">Gentamicina<small>⭐ REVISADO Ed36. Dosis: 7mg/kg c/24h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Tobramicina<small>⭐ REVISADO Ed36. Dosis: 7mg/kg c/24h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+
+      <p class="abx-group-label">Otros</p>
+      <div class="abx-row"><div class="abx-name">Minociclina<small>Útil en MDR-Ab. Confirmar CMI si zona 18–21mm</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ciprofloxacino<small>Frecuentemente resistente en CRAB</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">TMP-SMX</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2/38</span><span class="mic-pill mic-r">R ≥4/76</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefiderocol<small>XDR/PDR-Ab · solo complejo A. baumannii</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Colistina / Polimixina B<small>⚠️ Eficacia limitada. Solo combinación.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+
+      <div class="abx-source">⭐ Amikacina, gentamicina y tobramicina: BP REVISADOS en Ed36 (más estrictos). CLSI M100-Ed36 (2026) · Tabla 2B-2 · CMI en µg/mL</div>
     </div>
     <div class="panel" data-panel="resist">
       <div class="resist-card resist-mdr">
@@ -789,25 +1010,28 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
       <div class="alert alert-danger"><span class="alert-icon">🚨</span><span><strong>"Inoculum effect":</strong> cefalosporinas 3G pueden parecer S in vitro pero fallan in vivo por desrepresión de AmpC. Preferir cefepima o carbapenémico en infección grave.</span></div>
     </div>
     <div class="panel" data-panel="abx">
-      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>CLSI M100-Ed36 (2026): <strong>mismos puntos de corte que para Enterobacterales</strong> (Tabla 2A-1). Precaución especial con cefalosporinas 3G por AmpC inducible.</span></div>
-      <table class="mini-table">
-        <tr><th>Antibiótico</th><th>CMI S / I / R (µg/mL)</th><th>Nota clínica Ed36</th></tr>
-        <tr><td>Ampicilina</td><td class="mono">—</td><td><span class="r-r">Resistente natural (AmpC constitutiva)</span></td></tr>
-        <tr><td>Amox-clavulanato</td><td class="mono">—</td><td><span class="r-r">Resistente natural (AmpC no inhibida por clavulanato)</span></td></tr>
-        <tr><td>Ceftriaxona / Cefotaxima</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-r">⚠️ EVITAR en infección grave: selecciona AmpC desreprimida</span></td></tr>
-        <tr><td>Ceftazidima</td><td class="mono">≤4 / 8 / ≥16</td><td><span class="r-r">⚠️ EVITAR: mismo riesgo AmpC</span></td></tr>
-        <tr><td>Cefepima</td><td class="mono">≤2 (S) / 4-8 (SDD) / ≥16 (R)</td><td><span class="r-s">Preferir sobre 3G. Estable frente a AmpC. Suprimir si carbapenemasa +.</span></td></tr>
-        <tr><td>Pip-tazobactam</td><td class="mono">≤8/4 (S) / 16/4 (SDD) / ≥32/4 (R)</td><td><span class="r-var">Variable; riesgo si AmpC hiper-producida</span></td></tr>
-        <tr><td>Ceftazidima-avibactam</td><td class="mono">≤8/4 / — / ≥16/4</td><td><span class="r-s">KPC, OXA-48</span></td></tr>
-        <tr><td>Aztreonam-avibactam ⭐</td><td class="mono">≤4/4 / 8/4 / ≥16/4</td><td><span class="r-s">NUEVO Ed36: NDM + KPC coexistente</span></td></tr>
-        <tr><td>Ertapenem</td><td class="mono">≤0.5 / 1 / ≥2</td><td><span class="r-s">1ra línea infección moderada. Ed36: ertapenem-R puede no implicar KPC en Enterobacter (mecanismos alternos frecuentes).</span></td></tr>
-        <tr><td>Imipenem</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">S si KPC−</span></td></tr>
-        <tr><td>Meropenem</td><td class="mono">≤1 / 2 / ≥4</td><td><span class="r-s">Infección grave / UCI</span></td></tr>
-        <tr><td>Ciprofloxacino</td><td class="mono">≤0.25 / 0.5 / ≥1</td><td><span class="r-var">Variable</span></td></tr>
-        <tr><td>Amikacina</td><td class="mono">≤16 / — / ≥64</td><td><span class="r-s">S habitual; terapia de combinación</span></td></tr>
-        <tr><td>TMP-SMX</td><td class="mono">≤2/38 / — / ≥4/76</td><td><span class="r-var">Variable</span></td></tr>
-      </table>
-      <div class="clsi-note">⭐ Ed36: aztreonam-avibactam nuevo para Enterobacterales (tier 3, Tabla 1A-1). CLSI advierte: ertapenem-R en Enterobacter cloacae y K. aerogenes puede deberse a mecanismos sin carbapenemasa — no siempre requiere prueba de KPC. Evaluar en contexto clínico y epidemiológico.</div>
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-sdd">SDD X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>CLSI M100-Ed36: mismos BP que Enterobacterales. <strong>Evitar cefalosporinas 3G en infección grave</strong> — riesgo de selección de AmpC desreprimida.</span></div>
+
+      <p class="abx-group-label">β-lactámicos</p>
+      <div class="abx-row"><div class="abx-name">Ampicilina / Amox-clavulanato</div><div class="abx-pills"><span class="mic-pill mic-r">R natural</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftriaxona / Cefotaxima<small>⚠️ EVITAR en infección grave — selecciona AmpC</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefepima<small>Preferir sobre 3G. Estable frente a AmpC.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-sdd">SDD 4–8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Pip-tazobactam<small>Variable si AmpC hiper-producida</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-sdd">SDD 16/4</span><span class="mic-pill mic-r">R ≥32/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftazidima-avibactam<small>KPC, OXA-48</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Aztreonam-avibactam ⭐<small>NUEVO Ed36 · NDM + KPC coexistente</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4/4</span><span class="mic-pill mic-i">I 8/4</span><span class="mic-pill mic-r">R ≥16/4</span></div></div>
+
+      <p class="abx-group-label">Carbapenémicos</p>
+      <div class="abx-row"><div class="abx-name">Ertapenem<small>Ed36: ertapenem-R en Enterobacter puede ser sin KPC</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Imipenem</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Meropenem<small>Infección grave / UCI</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+
+      <p class="abx-group-label">Otros</p>
+      <div class="abx-row"><div class="abx-name">Ciprofloxacino</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-i">I 0.5</span><span class="mic-pill mic-r">R ≥1</span></div></div>
+      <div class="abx-row"><div class="abx-name">Amikacina</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤16</span><span class="mic-pill mic-r">R ≥64</span></div></div>
+      <div class="abx-row"><div class="abx-name">TMP-SMX</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2/38</span><span class="mic-pill mic-r">R ≥4/76</span></div></div>
+
+      <div class="abx-source">⭐ Aztreonam-avibactam: nuevo en Ed36. CLSI M100-Ed36 (2026) · Tabla 2A-1 · CMI en µg/mL</div>
     </div>
     <div class="panel" data-panel="resist">
       <div class="resist-card resist-warn">
@@ -837,12 +1061,424 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
 
 <!-- ========== COMING SOON SECTIONS ========== -->
 <div id="section-gram-pos" class="hidden">
-  <div class="coming-soon">
-    <div class="cs-icon">🔬</div>
-    <h3>Gram positivos — próximamente</h3>
-    <p>En construcción: <em>S. aureus</em> (MRSA/MSSA), <em>Enterococcus</em> (VRE), <em>S. pneumoniae</em>, Streptococcus spp.</p>
+
+<div class="hero" style="background:linear-gradient(135deg,#6d28d9 0%,#4338ca 100%)">
+  <h2>Gram positivos</h2>
+  <p>Susceptibilidad según CLSI M100-Ed36 (2026) · Tablas 2C, 2D, 2G, 2H-1</p>
+  <div class="hero-chips">
+    <span class="hero-chip">CLSI Ed36 2026</span>
+    <span class="hero-chip">S. aureus · MRSA</span>
+    <span class="hero-chip">Enterococcus</span>
+    <span class="hero-chip">Streptococcus</span>
   </div>
 </div>
+
+<!-- S. AUREUS -->
+<div class="bacteria-card" data-search="staphylococcus aureus MRSA MSSA vancomicina daptomicina linezolid cefoxitina oxacilina PBP2a coagulasa">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#f0e6ff;color:#6d28d9">GP</div>
+    <div>
+      <div class="bacteria-name">Staphylococcus aureus</div>
+      <div class="bacteria-family">Staphylococcaceae · MRSA / MSSA</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'gram')">Gram / Morfología</div>
+      <div class="sec-tab" onclick="switchTab(this,'id')">Identificación</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Antibiograma</div>
+      <div class="sec-tab" onclick="switchTab(this,'resist')">Resistencias</div>
+    </div>
+
+    <div class="panel active" data-panel="gram">
+      <div class="gram-illustration">
+        <svg width="78" height="78" viewBox="0 0 78 78" style="flex-shrink:0">
+          <rect width="78" height="78" rx="10" fill="#f0e6ff"/>
+          <circle cx="28" cy="32" r="7" fill="#6d28d9" opacity="0.9"/>
+          <circle cx="40" cy="28" r="7" fill="#6d28d9" opacity="0.85"/>
+          <circle cx="50" cy="35" r="7" fill="#4338ca" opacity="0.9"/>
+          <circle cx="35" cy="44" r="7" fill="#6d28d9" opacity="0.85"/>
+          <circle cx="47" cy="48" r="7" fill="#4338ca" opacity="0.8"/>
+          <circle cx="22" cy="46" r="7" fill="#6d28d9" opacity="0.8"/>
+          <circle cx="58" cy="44" r="7" fill="#4338ca" opacity="0.75"/>
+        </svg>
+        <div class="gram-desc">
+          <h4>Coco Gram positivo en racimos</h4>
+          <p>Cocos esféricos, Gram positivos, agrupados en racimos irregulares ("uvas"). No esporulados. Catalasa positivo. Colonias doradas/amarillas en agar sangre con beta-hemólisis.</p>
+        </div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-blue">Coco GP</span>
+        <span class="tag tag-warn">Catalasa +</span>
+        <span class="tag tag-red">Coagulasa +</span>
+        <span class="tag tag-green">Beta-hemólisis</span>
+        <span class="tag tag-warn">DNasa +</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Prueba</th><th>Resultado</th></tr>
+        <tr><td>Catalasa</td><td class="r-s">Positivo (diferencia de Streptococcus)</td></tr>
+        <tr><td>Coagulasa (tubo)</td><td class="r-s">Positivo (diferencia de SCN)</td></tr>
+        <tr><td>Cefoxitina (disco 30µg)</td><td>Surrogado MRSA: ≥25mm = MSSA / ≤24mm = MRSA</td></tr>
+        <tr><td>PBP2a (látex)</td><td>Gold standard para MRSA — detecta gen mecA/mecC</td></tr>
+        <tr><td>Manitol (agar sal-manitol)</td><td class="r-s">Positivo — colonias amarillas</td></tr>
+      </table>
+    </div>
+
+    <div class="panel" data-panel="id">
+      <div class="algo-step"><div class="algo-num">1</div><div class="algo-content"><strong>Catalasa</strong><span>Positivo = Staphylococcus. Negativo = Streptococcus/Enterococcus.</span></div></div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-step"><div class="algo-num">2</div><div class="algo-content"><strong>Coagulasa</strong><span>Positivo = S. aureus (o S. pseudintermedius en animales). Negativo = SCN (Staphylococcus coagulasa negativo).</span></div></div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-step"><div class="algo-num">3</div><div class="algo-content"><strong>MRSA vs MSSA</strong><span>Cefoxitina disco (S. aureus 16–18h): zona ≤21mm = MRSA. O PBP2a látex. O PCR mecA/mecC.</span></div></div>
+      <div class="algo-branch">
+        <div class="branch-yes"><div class="bl">MRSA</div><p>Resistente a todos los β-lactámicos excepto ceftarolina. Ver antibiograma.</p></div>
+        <div class="branch-no"><div class="bl">MSSA</div><p>Oxacilina/nafcilina son 1ra línea en infección grave.</p></div>
+      </div>
+      <div class="alert alert-info"><span class="alert-icon">💡</span><span>MALDI-TOF identifica S. aureus en minutos. S. aureus complex incluye S. argenteus y S. schweitzeri — usar breakpoints de S. aureus.</span></div>
+    </div>
+
+    <div class="panel" data-panel="abx">
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-sdd">SDD X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>MRSA = resistente a todos los β-lactámicos excepto ceftarolina. No reportar otros β-lactámicos en MRSA.</span></div>
+
+      <p class="abx-group-label">β-lactámicos</p>
+      <div class="abx-row"><div class="abx-name">Penicilina<small>Solo si β-lactamasa negativo — confirmar con prueba de nitrocefin</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.12</span><span class="mic-pill mic-r">R ≥0.25</span></div></div>
+      <div class="abx-row"><div class="abx-name">Oxacilina / Cefoxitina (MSSA)<small>Aplica a todos los β-lactámicos estables a penicilinasa</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftarolina<small>MSSA y MRSA · SDD: 600 mg IV c/8h x2h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-sdd">SDD 2–4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+
+      <p class="abx-group-label">Glucopéptidos</p>
+      <div class="abx-row"><div class="abx-name">Vancomicina<small>Solo CMI — disco NO confiable. CMI ≥8: enviar a lab referencia.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4–8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Dalbavancin<small>MRSA · 1500 mg IV dosis única</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+      <div class="abx-row"><div class="abx-name">Oritavancin<small>MRSA · 1200 mg IV dosis única</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.12</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+      <div class="abx-row"><div class="abx-name">Telavancin<small>MRSA · 10 mg/kg IV c/24h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.12</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+
+      <p class="abx-group-label">Lipopéptidos / Oxazolidinonas</p>
+      <div class="abx-row"><div class="abx-name">Daptomicina<small>No reportar en neumonía (inactivado por surfactante)</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+      <div class="abx-row"><div class="abx-name">Linezolid</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-i">I 5–7</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Tedizolid<small>S en linezolid → S en tedizolid. 200 mg c/24h.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Lefamulin<small>MRSA · 150 mg IV o 600 mg PO c/12h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+
+      <p class="abx-group-label">Otras clases</p>
+      <div class="abx-row"><div class="abx-name">TMP-SMX<small>MRSA comunitario oral. No en bacteriemia.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2/38</span><span class="mic-pill mic-r">R ≥4/76</span></div></div>
+      <div class="abx-row"><div class="abx-name">Clindamicina<small>Verificar resistencia inducible (D-test) si eritromicina R</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1–2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Rifampicina<small>NUNCA en monoterapia. Solo combinación.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Gentamicina<small>Solo en combinación con otro agente activo</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-i">I 8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Minocicline / Doxiciclina<small>MRSA comunitario oral</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-i">I 8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+
+      <div class="abx-source">CLSI M100-Ed36 (2026) · Tabla 2C · CMI en µg/mL · Disk: MHA 35°C 16–18h (cefoxitina 24h)</div>
+    </div>
+
+    <div class="panel" data-panel="resist">
+      <div class="resist-card resist-mdr">
+        <h4>MRSA — Meticilino-resistente S. aureus</h4>
+        <ul>
+          <li>Mecanismo: gen mecA (o mecC) → PBP2a con baja afinidad por β-lactámicos</li>
+          <li>Resistente a todos los β-lactámicos excepto ceftarolina</li>
+          <li>Detección: cefoxitina disco (surrogado), PBP2a látex, PCR mecA</li>
+          <li><strong>MRSA-AC (comunitario):</strong> TMP-SMX, doxiciclina, clindamycin (si D-test negativo)</li>
+          <li><strong>MRSA-AH (nosocomial):</strong> vancomicina, daptomicina, linezolid, ceftarolina</li>
+        </ul>
+      </div>
+      <div class="resist-card resist-warn">
+        <h4>VISA / VRSA — Resistencia a vancomicina</h4>
+        <ul>
+          <li>VISA (CMI 4–8 µg/mL): engrosamiento de pared celular. Emerge bajo presión de vancomicina.</li>
+          <li>VRSA (CMI ≥16 µg/mL): transferencia del gen vanA desde Enterococcus. Muy raro.</li>
+          <li>Enviar a laboratorio de referencia. Opciones: daptomicina, linezolid, ceftarolina, tedizolid.</li>
+          <li>Monitorear CMI de vancomicina en bacteriemias prolongadas.</li>
+        </ul>
+      </div>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>MRSA y VRSA: notificación obligatoria. Precauciones de contacto. Cohorte de pacientes. Buscar fuente (catéter, endocarditis, osteomielitis).</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ENTEROCOCCUS -->
+<div class="bacteria-card" data-search="enterococcus faecalis faecium VRE vancomicina ampicilina linezolid daptomicina endocarditis ITU">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#f0e6ff;color:#6d28d9">GP</div>
+    <div>
+      <div class="bacteria-name">Enterococcus spp.</div>
+      <div class="bacteria-family">E. faecalis · E. faecium · VRE</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'gram')">Gram / Morfología</div>
+      <div class="sec-tab" onclick="switchTab(this,'id')">Identificación</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Antibiograma</div>
+      <div class="sec-tab" onclick="switchTab(this,'resist')">Resistencias</div>
+    </div>
+
+    <div class="panel active" data-panel="gram">
+      <div class="gram-illustration">
+        <svg width="78" height="78" viewBox="0 0 78 78" style="flex-shrink:0">
+          <rect width="78" height="78" rx="10" fill="#f0e6ff"/>
+          <ellipse cx="22" cy="36" rx="7" ry="6" fill="#6d28d9" opacity="0.9"/>
+          <ellipse cx="35" cy="34" rx="7" ry="6" fill="#4338ca" opacity="0.85"/>
+          <ellipse cx="48" cy="36" rx="7" ry="6" fill="#6d28d9" opacity="0.9"/>
+          <ellipse cx="28" cy="50" rx="7" ry="6" fill="#4338ca" opacity="0.85"/>
+          <ellipse cx="42" cy="50" rx="7" ry="6" fill="#6d28d9" opacity="0.8"/>
+          <ellipse cx="56" cy="48" rx="7" ry="6" fill="#4338ca" opacity="0.75"/>
+        </svg>
+        <div class="gram-desc">
+          <h4>Coco Gram positivo en pares/cadenas cortas</h4>
+          <p>Cocos ovoides en pares o cadenas cortas. Catalasa negativo. Crece en NaCl 6.5% y bilis-esculina (diferencia de Streptococcus). Anaerobio facultativo.</p>
+        </div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-blue">Coco GP</span>
+        <span class="tag tag-red">Catalasa −</span>
+        <span class="tag tag-green">NaCl 6.5% +</span>
+        <span class="tag tag-green">Bilis-esculina +</span>
+        <span class="tag tag-warn">PYR +</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Prueba</th><th>E. faecalis</th><th>E. faecium</th></tr>
+        <tr><td>PYR</td><td class="r-s">Positivo</td><td class="r-var">Variable</td></tr>
+        <tr><td>Motilidad</td><td class="r-r">Negativo</td><td class="r-r">Negativo</td></tr>
+        <tr><td>Ampicilina CMI</td><td>≤8 µg/mL</td><td>>8 µg/mL (>80% R)</td></tr>
+        <tr><td>VRE prevalencia</td><td>Menor</td><td><strong>Mayor (vanA frecuente)</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="panel" data-panel="id">
+      <div class="algo-step"><div class="algo-num">1</div><div class="algo-content"><strong>Catalasa negativo</strong><span>Descarta Staphylococcus. Continua con Streptococcus vs Enterococcus.</span></div></div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-step"><div class="algo-num">2</div><div class="algo-content"><strong>NaCl 6.5% + Bilis-esculina</strong><span>Ambos positivos = Enterococcus. Streptococcus bovis: bilis-esculina + pero NO crece en NaCl 6.5%.</span></div></div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-step"><div class="algo-num">3</div><div class="algo-content"><strong>Identificación de especie</strong><span>MALDI-TOF (preferido). Bioquímica: PYR, motilidad, arabinosa, pigmento.</span></div></div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-step"><div class="algo-num">4</div><div class="algo-content"><strong>Detección VRE</strong><span>Vancomicina CMI ≥32 µg/mL. PCR vanA/vanB. Agar cromogénico selectivo para screening.</span></div></div>
+      <div class="alert alert-info"><span class="alert-icon">💡</span><span>E. faecalis es más virulento (produce toxinas, biofilm). E. faecium tiene mayor resistencia intrínseca y es el principal portador de VRE en hospitales.</span></div>
+    </div>
+
+    <div class="panel" data-panel="abx">
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-sdd">SDD X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>Resistencia intrínseca: cefalosporinas, clindamicina, TMP-SMX. Efecto bacteriostático solo con ampicilina o vancomicina — para endocarditis agregar aminoglucósido (sinergismo).</span></div>
+
+      <p class="abx-group-label">β-lactámicos</p>
+      <div class="abx-row"><div class="abx-name">Ampicilina<small>E. faecalis 1ra línea. E. faecium >80% resistente.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8</span><span class="mic-pill mic-r">R ≥16</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ampicilina-sulbactam<small>Solo para endocarditis E. faecalis con alto nivel de resistencia a gentamicina</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤8/4</span><span class="mic-pill mic-r">R ≥32/16</span></div></div>
+
+      <p class="abx-group-label">Glucopéptidos</p>
+      <div class="abx-row"><div class="abx-name">Vancomicina<small>No usar en VRE (vanA). vanB puede ser susceptible.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-i">I 8–16</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+      <div class="abx-row"><div class="abx-name">Dalbavancin<small>Solo E. faecalis vancomicina-susceptible</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+      <div class="abx-row"><div class="abx-name">Oritavancin<small>Solo E. faecalis vancomicina-susceptible</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.12</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+
+      <p class="abx-group-label">Lipopéptidos / Oxazolidinonas</p>
+      <div class="abx-row"><div class="abx-name">Daptomicina<small>E. faecium SDD: 8–12 mg/kg. Otros: 6 mg/kg c/24h.</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤4</span><span class="mic-pill mic-sdd">SDD 8–16</span><span class="mic-pill mic-r">R ≥32</span></div></div>
+      <div class="abx-row"><div class="abx-name">Linezolid<small>VRE · Bacteriostático</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Tedizolid<small>Solo E. faecalis · 200 mg c/24h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-i">0.5</span><span class="mic-pill mic-r">R ≥1</span></div></div>
+      <div class="abx-row"><div class="abx-name">Telavancin<small>Solo E. faecalis vancomicina-susceptible</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.12</span><span class="mic-pill mic-na">sin I/R</span></div></div>
+
+      <p class="abx-group-label">Aminoglucósidos (sinergismo)</p>
+      <div class="abx-row"><div class="abx-name">Gentamicina (alto nivel)<small>Sinergismo en endocarditis · HLAR ≥500 µg/mL = sin sinergia</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤500</span><span class="mic-pill mic-r">R ≥500</span></div></div>
+      <div class="abx-row"><div class="abx-name">Estreptomicina (alto nivel)<small>Alternativa si HLAR gentamicina</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1000</span><span class="mic-pill mic-r">R ≥1000</span></div></div>
+
+      <div class="abx-source">CLSI M100-Ed36 (2026) · Tabla 2D · CMI en µg/mL · HLAR = High-Level Aminoglycoside Resistance</div>
+    </div>
+
+    <div class="panel" data-panel="resist">
+      <div class="resist-card resist-info">
+        <h4>Resistencia intrínseca (natural)</h4>
+        <ul>
+          <li>Cefalosporinas (todas las generaciones)</li>
+          <li>Clindamicina, cotrimoxazol</li>
+          <li>Oxacilina / nafcilina</li>
+          <li>Efecto bacteriostático: ampicilina y vancomicina son bacteriostáticos — para endocarditis necesitar sinergia con aminoglucósido</li>
+        </ul>
+      </div>
+      <div class="resist-card resist-mdr">
+        <h4>VRE — Enterococcus resistente a vancomicina</h4>
+        <ul>
+          <li><strong>vanA:</strong> resistencia a vancomicina (CMI ≥64) Y teicoplanina (CMI ≥16). Más frecuente en E. faecium. Transferible.</li>
+          <li><strong>vanB:</strong> resistencia a vancomicina (CMI 16–512) pero susceptible a teicoplanina. E. faecalis y faecium.</li>
+          <li>Tratamiento VRE: linezolid, daptomicina (dosis altas), tedizolid. Consultar infectólogo.</li>
+          <li>Siempre: precauciones de contacto + screening de portadores en contactos.</li>
+        </ul>
+      </div>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>VRE = patógeno ESKAPE. Notificación obligatoria. Implementar precauciones de contacto. Cohorte. Revisión de ecología del servicio.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S. PNEUMONIAE -->
+<div class="bacteria-card" data-search="streptococcus pneumoniae neumococo penicilina ceftriaxona optoquina meropenem neumonía meningitis">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#f0e6ff;color:#6d28d9">GP</div>
+    <div>
+      <div class="bacteria-name">Streptococcus pneumoniae</div>
+      <div class="bacteria-family">Streptococcaceae · Neumococo</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'gram')">Gram / Morfología</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Antibiograma</div>
+      <div class="sec-tab" onclick="switchTab(this,'resist')">Resistencias</div>
+    </div>
+
+    <div class="panel active" data-panel="gram">
+      <div class="gram-illustration">
+        <svg width="78" height="78" viewBox="0 0 78 78" style="flex-shrink:0">
+          <rect width="78" height="78" rx="10" fill="#f0e6ff"/>
+          <ellipse cx="26" cy="38" rx="9" ry="7" fill="#6d28d9" opacity="0.85"/>
+          <ellipse cx="40" cy="36" rx="9" ry="7" fill="#4338ca" opacity="0.9"/>
+          <ellipse cx="22" cy="52" rx="9" ry="7" fill="#6d28d9" opacity="0.8"/>
+          <ellipse cx="38" cy="52" rx="9" ry="7" fill="#4338ca" opacity="0.85"/>
+          <ellipse cx="52" cy="44" rx="9" ry="7" fill="#6d28d9" opacity="0.8"/>
+        </svg>
+        <div class="gram-desc">
+          <h4>Diplococo GP lanceolado encapsulado</h4>
+          <p>Diplococos lanceolados (en forma de llama), Gram positivos, encapsulados. Alpha-hemólisis (verdina). Catalasa negativo. Optoquina sensible. Bilis-soluble.</p>
+        </div>
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-blue">Diplococo GP</span>
+        <span class="tag tag-green">α-hemólisis</span>
+        <span class="tag tag-red">Catalasa −</span>
+        <span class="tag tag-warn">Optoquina S</span>
+        <span class="tag tag-warn">Bilis-soluble</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Prueba</th><th>Resultado</th></tr>
+        <tr><td>Optoquina (P-disc 5µg)</td><td class="r-s">Sensible: halo ≥14mm (diferencia de Viridans)</td></tr>
+        <tr><td>Bilis-solubilidad</td><td class="r-s">Positivo (deoxicolato lisa la colonia)</td></tr>
+        <tr><td>Quellung</td><td class="r-s">Positivo — cápsula polisacarídica visible</td></tr>
+        <tr><td>Ag en orina (Binax)</td><td>Útil en NAC — detecta cualquier serotipo</td></tr>
+      </table>
+    </div>
+
+    <div class="panel" data-panel="abx">
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>CLSI Tabla 2G — puntos de corte de penicilina varían por sitio de infección. Siempre especificar si meningitis o no meningitis.</span></div>
+
+      <p class="abx-group-label">Penicilinas (no meningitis)</p>
+      <div class="abx-row"><div class="abx-name">Penicilina G IV<small>NAC, sinusitis, otitis — NO meningitis</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Penicilina G IV<small>Meningitis — BP mucho más estricto</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.06</span><span class="mic-pill mic-i">I 0.12–1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Amoxicilina PO<small>No meningitis · 500 mg PO c/8h o 875 mg c/12h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+
+      <p class="abx-group-label">Cefalosporinas</p>
+      <div class="abx-row"><div class="abx-name">Ceftriaxona (no meningitis)<small>2g IV c/12–24h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftriaxona (meningitis)<small>2g IV c/12h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Cefepima (no meningitis)</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-i">I 2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+
+      <p class="abx-group-label">Carbapenémicos / Macrólidos / Otros</p>
+      <div class="abx-row"><div class="abx-name">Meropenem (no meningitis)</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-i">I 0.5</span><span class="mic-pill mic-r">R ≥1</span></div></div>
+      <div class="abx-row"><div class="abx-name">Azitromicina<small>NAC leve-moderada · alta resistencia en LATAM</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Levofloxacino<small>NAC ambulatoria con comorbilidades</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">I 4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Linezolid</div><div class="abx-pills"><span class="mic-pill mic-s">S ≤2</span><span class="mic-pill mic-i">4</span><span class="mic-pill mic-r">R ≥8</span></div></div>
+      <div class="abx-row"><div class="abx-name">Vancomicina<small>Meningitis: siempre + ceftriaxona hasta CMI penicilina disponible</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-na">sin I/R CLSI</span></div></div>
+
+      <div class="abx-source">CLSI M100-Ed36 (2026) · Tabla 2G · CMI en µg/mL · BP penicilina difieren por sitio de infección</div>
+    </div>
+
+    <div class="panel" data-panel="resist">
+      <div class="resist-card resist-warn">
+        <h4>Resistencia a penicilina — mecanismo PBP</h4>
+        <ul>
+          <li>No produce β-lactamasa — resistencia por mutaciones en PBP (PBP1a, 2x, 2b)</li>
+          <li>PNSP (Penicillin Non-Susceptible S. pneumoniae): CMI ≥0.12 µg/mL para meningitis</li>
+          <li>En LATAM: 20–40% de aislamientos con susceptibilidad reducida a penicilina</li>
+          <li>Meningitis neumocócica: iniciar vancomicina + ceftriaxona hasta CMI penicilina disponible</li>
+        </ul>
+      </div>
+      <div class="resist-card resist-info">
+        <h4>Profilaxis y vacunación</h4>
+        <ul>
+          <li>VCN-15 (Vaxneuvance): 15 serotipos. Adultos ≥65 años o inmunocomprometidos.</li>
+          <li>VCN-20 (Prevnar 20): 20 serotipos. Aprobada para adultos.</li>
+          <li>VPN-23 (Pneumovax): 23 serotipos. Polisacárida, menor inmunogenicidad.</li>
+          <li>Niños: esquema VCN-13 o VCN-15 según programa nacional.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S. PYOGENES / AGALACTIAE -->
+<div class="bacteria-card" data-search="streptococcus pyogenes agalactiae grupo A B beta hemolisis bacitracina CAMP penicilina faringitis fascitis">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#f0e6ff;color:#6d28d9">GP</div>
+    <div>
+      <div class="bacteria-name">Streptococcus β-hemolíticos</div>
+      <div class="bacteria-family">S. pyogenes (GpA) · S. agalactiae (GpB)</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'gram')">Gram / Morfología</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Antibiograma</div>
+      <div class="sec-tab" onclick="switchTab(this,'resist')">Resistencias</div>
+    </div>
+
+    <div class="panel active" data-panel="gram">
+      <div class="tag-row">
+        <span class="tag tag-blue">Coco GP en cadenas</span>
+        <span class="tag tag-red">β-hemólisis</span>
+        <span class="tag tag-red">Catalasa −</span>
+        <span class="tag tag-warn">Grupo Lancefield</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Prueba</th><th>S. pyogenes (GpA)</th><th>S. agalactiae (GpB)</th></tr>
+        <tr><td>Bacitracina (0.04U)</td><td class="r-s">Sensible</td><td class="r-r">Resistente</td></tr>
+        <tr><td>CAMP test</td><td class="r-r">Negativo</td><td class="r-s">Positivo (flecha con S. aureus)</td></tr>
+        <tr><td>Hipurato hidrólisis</td><td class="r-r">Negativo</td><td class="r-s">Positivo</td></tr>
+        <tr><td>PYR</td><td class="r-s">Positivo</td><td class="r-r">Negativo</td></tr>
+        <tr><td>Grupo Lancefield</td><td>A</td><td>B</td></tr>
+      </table>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>S. pyogenes NUNCA es resistente a penicilina. Si CMI elevada → revisar identificación. Complicaciones graves: SSTE, fascitis necrosante, fiebre reumática.</span></div>
+    </div>
+
+    <div class="panel" data-panel="abx">
+      <div class="abx-legend">CMI (µg/mL): <span><span class="mic-pill mic-s">S ≤X</span></span><span><span class="mic-pill mic-i">I X</span></span><span><span class="mic-pill mic-r">R ≥X</span></span></div>
+      <div class="alert alert-info"><span class="alert-icon">📋</span><span>CLSI Tabla 2H-1. Puntos de corte Ed36: se agregó TMP-SMX (nuevo en Ed36). Penicilina: nunca resistente en S. pyogenes.</span></div>
+
+      <p class="abx-group-label">β-lactámicos (ambas especies)</p>
+      <div class="abx-row"><div class="abx-name">Penicilina G<small>S. pyogenes: NUNCA resistente · S. agalactiae: siempre S</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.12</span><span class="mic-pill mic-i">I 0.25–2</span><span class="mic-pill mic-r">R ≥4</span></div></div>
+      <div class="abx-row"><div class="abx-name">Amoxicilina<small>Faringitis · 500 mg c/8h o 1g c/12h x10 días</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ceftriaxona<small>Infección grave / bacteriemia</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Ampicilina (S. agalactiae)<small>Profilaxis intraparto: 2g IV → 1g c/4h</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+
+      <p class="abx-group-label">Alternativas (alergia a β-lactámicos)</p>
+      <div class="abx-row"><div class="abx-name">Azitromicina<small>Verificar sensibilidad — resistencia 10–20% en LATAM</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5</span><span class="mic-pill mic-i">I 1</span><span class="mic-pill mic-r">R ≥2</span></div></div>
+      <div class="abx-row"><div class="abx-name">Clindamicina<small>Verificar D-test antes de usar</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.25</span><span class="mic-pill mic-i">I 0.5</span><span class="mic-pill mic-r">R ≥1</span></div></div>
+      <div class="abx-row"><div class="abx-name">Vancomicina<small>Alergia grave a penicilina</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤1</span><span class="mic-pill mic-na">sin I/R CLSI</span></div></div>
+      <div class="abx-row"><div class="abx-name">TMP-SMX ⭐<small>NUEVO en Ed36 para GpB (solo piel y tejidos blandos)</small></div><div class="abx-pills"><span class="mic-pill mic-s">S ≤0.5/9.5</span><span class="mic-pill mic-r">R ≥2/38</span></div></div>
+
+      <div class="abx-source">⭐ TMP-SMX: NUEVO en CLSI M100-Ed36 (2026) para Streptococcus β-hemolítico (solo SSTI). Tabla 2H-1. CMI en µg/mL.</div>
+    </div>
+
+    <div class="panel" data-panel="resist">
+      <div class="resist-card resist-green" style="background:var(--success-bg);border-color:var(--success)">
+        <h4 style="color:var(--success)">S. pyogenes — nunca resistente a penicilina</h4>
+        <ul>
+          <li>Sensibilidad universal a β-lactámicos (penicilina, amoxicilina, cefalosporinas)</li>
+          <li>Sin necesidad de antibiograma rutinario para β-lactámicos</li>
+          <li>Sí puede ser resistente a macrólidos (15–20% en LATAM) y tetraciclinas</li>
+          <li>Complicaciones post-infecciosas: fiebre reumática (ASTO), glomerulonefritis aguda</li>
+        </ul>
+      </div>
+      <div class="resist-card resist-warn">
+        <h4>S. agalactiae — GpB neonatal</h4>
+        <ul>
+          <li>Siempre susceptible a penicilina y ampicilina</li>
+          <li>Tamizaje vaginal: semana 35–37 de embarazo</li>
+          <li>Profilaxis intraparto: penicilina G 5M U IV → 2.5M U c/4h hasta parto</li>
+          <li>Alergia a penicilina: clindamicina (si susceptible) o vancomicina</li>
+          <li>Resistencia a macrólidos: hasta 30% en algunas regiones — verificar CMI</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /section-gram-pos -->
 <div id="section-hongos" class="hidden">
 
 <!-- HERO HONGOS -->
@@ -1607,12 +2243,369 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
 
 </div><!-- /section-hongos -->
 <div id="section-micobacterias" class="hidden">
-  <div class="coming-soon">
-    <div class="cs-icon">🧫</div>
-    <h3>Micobacterias — próximamente</h3>
-    <p>En construcción: <em>M. tuberculosis</em>, micobacterias no tuberculosas, interpretación IGRA/TST, resistencia a rifampicina.</p>
+
+<!-- HERO -->
+<div class="hero" style="background:linear-gradient(135deg,#2c1654 0%,#4a2080 100%)">
+  <h2>Micobacterias no tuberculosas</h2>
+  <p>Susceptibilidad clínica según CLSI M62, IDSA 2020 y ATS/ERS/ESCMID 2020</p>
+  <div class="hero-chips">
+    <span class="hero-chip">CLSI M62</span>
+    <span class="hero-chip">IDSA 2020</span>
+    <span class="hero-chip">ATS/ERS/ESCMID</span>
+    <span class="hero-chip">4 especies</span>
   </div>
 </div>
+
+<!-- NOTA METODOLÓGICA -->
+<div class="alert alert-info" style="margin-bottom:14px">
+  <span class="alert-icon">📋</span>
+  <span><strong>Nota metodológica:</strong> Las MNT requieren el documento <strong>CLSI M62</strong> (no M100). Las pruebas de susceptibilidad deben realizarse en centros de referencia. Los puntos de corte aquí corresponden a CLSI M62-Ed1 2018 / IDSA 2020 / ATS 2020. No todos los agentes tienen breakpoints validados — en esos casos se usa la CMI epidemiológica (ECV).</span>
+</div>
+
+<!-- MAC -->
+<div class="bacteria-card" data-search="mycobacterium avium complex MAC azitromicina claritromicina amikacina etambutol rifabutina pulmón">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#f0e6ff;color:#6d28d9;font-size:9px;font-weight:700">MNT</div>
+    <div>
+      <div class="bacteria-name">M. avium complex (MAC)</div>
+      <div class="bacteria-family">M. avium · M. intracellulare · M. chimaera</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'morfologia')">Morfología / Cultivo</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Susceptibilidad</div>
+      <div class="sec-tab" onclick="switchTab(this,'tto')">Tratamiento</div>
+    </div>
+    <div class="panel active" data-panel="morfologia">
+      <div class="tag-row">
+        <span class="tag tag-blue">Bacilo ácido-alcohol resistente</span>
+        <span class="tag tag-warn">Crecimiento lento (2–6 sem)</span>
+        <span class="tag tag-green">Scotochromógeno / Acromógeno</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Característica</th><th>Detalle</th></tr>
+        <tr><td>Tinción</td><td>Ziehl-Neelsen / Auramina-rodamina (fluorescente). BAAR positivo.</td></tr>
+        <tr><td>Temperatura óptima</td><td>37°C. Algunos aislados crecen a 30°C.</td></tr>
+        <tr><td>Medio</td><td>Löwenstein-Jensen, Middlebrook 7H10/7H11, MGIT (líquido, más rápido)</td></tr>
+        <tr><td>Tiempo de cultivo</td><td>2–6 semanas en sólido; 7–21 días en MGIT</td></tr>
+        <tr><td>Identificación definitiva</td><td>MALDI-TOF, sonda de ADN (AccuProbe), secuenciación 16S rRNA / hsp65</td></tr>
+        <tr><td>Pigmento</td><td>Colonias no pigmentadas (acromógenas) o amarillas en oscuridad (scotocromógenas según subespecie)</td></tr>
+      </table>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <span><strong>M. chimaera</strong> (subespecie de MAC): brotes asociados a oxigenadores de circulación extracorpórea (heater-cooler units). Presentación tardía (meses-años post-cirugía). Alta mortalidad.</span>
+      </div>
+    </div>
+    <div class="panel" data-panel="abx">
+      <div class="alert alert-info"><span class="alert-icon">📋</span><span>Puntos de corte: <strong>CLSI M62-Ed1 / IDSA 2020</strong>. Método: microdilución en caldo (BMD) en Middlebrook 7H9. Solo se recomienda realizar pruebas de susceptibilidad para los agentes listados abajo.</span></div>
+      <div class="sec-label">Agentes con breakpoints validados (CLSI M62)</div>
+      <table class="mini-table">
+        <tr><th>Antibiótico</th><th>CMI S / R (µg/mL)</th><th>Nota clínica</th></tr>
+        <tr><td>Claritromicina</td><td class="mono">≤8 / ≥32</td><td><span class="r-s">Pilar del tratamiento. Predictor de respuesta clínica.</span></td></tr>
+        <tr><td>Azitromicina</td><td class="mono">≤16 / ≥32</td><td><span class="r-s">Alternativa a claritromicina. ECV: ≤16 µg/mL = sensible.</span></td></tr>
+        <tr><td>Amikacina</td><td class="mono">≤16 / ≥64</td><td><span class="r-warn">Solo en enfermedad grave o refractaria. Monitorear nefro/ototoxicidad.</span></td></tr>
+        <tr><td>Etambutol</td><td class="mono">≤4 / ≥8</td><td><span class="r-s">Siempre en combinación. No usar como monoterapia.</span></td></tr>
+        <tr><td>Rifabutina</td><td class="mono">≤0.5 / ≥2</td><td><span class="r-s">Preferir sobre rifampicina en MAC. Menos interacciones con claritromicina.</span></td></tr>
+        <tr><td>Rifampicina</td><td class="mono">≤1 / ≥4</td><td><span class="r-var">Alternativa si no hay rifabutina. Interacción con macrólidos.</span></td></tr>
+        <tr><td>Linezolid</td><td class="mono">ECV ≤8</td><td><span class="r-warn">Sin breakpoint validado. ECV solo. Reservar para fracaso terapéutico.</span></td></tr>
+        <tr><td>Moxifloxacino</td><td class="mono">ECV ≤1</td><td><span class="r-var">Sin breakpoint clínico. Usar solo en combinación + experimento.</span></td></tr>
+      </table>
+      <div class="resist-card resist-mdr" style="margin-top:10px">
+        <h4>Resistencia a macrólidos — alarma clínica crítica</h4>
+        <ul>
+          <li>Claritromicina CMI ≥32 µg/mL = resistente → cambio de esquema obligatorio</li>
+          <li>Mecanismo: mutaciones en dominio V del gen 23S rRNA (erm(41) en M. abscessus)</li>
+          <li>Resistencia inducible en MAC: evaluar siempre con lectura a 14 días</li>
+          <li>Si resistencia confirmada: esquema sin macrólido + amikacina IV + consultar infectólogo</li>
+        </ul>
+      </div>
+      <div class="clsi-note">CLSI M62-Ed1 2018. IDSA NTM Guidelines 2020 (Daley et al, CID). Método obligatorio: BMD en 7H9. No usar VITEK ni paneles bacterianos estándar para MNT.</div>
+    </div>
+    <div class="panel" data-panel="tto">
+      <div class="sec-label">Esquema estándar IDSA 2020 — Enfermedad pulmonar MAC</div>
+      <table class="mini-table">
+        <tr><th>Fármaco</th><th>Dosis</th><th>Rol</th></tr>
+        <tr><td>Azitromicina o Claritromicina</td><td>Azitro 250–500 mg/día o Clari 500 mg c/12h</td><td><span class="r-s">Pilar — nunca monoterapia</span></td></tr>
+        <tr><td>Etambutol</td><td>15 mg/kg/día (máx 1g)</td><td><span class="r-s">Siempre en combinación</span></td></tr>
+        <tr><td>Rifabutina o Rifampicina</td><td>Rifabutina 150–300 mg/día o RIF 10 mg/kg/día</td><td><span class="r-s">Tercero del esquema base</span></td></tr>
+        <tr><td>Amikacina IV/inhalatoria</td><td>IV: 15 mg/kg 3×/semana. Inh: 590 mg/día (ALIS)</td><td><span class="r-warn">Enfermedad grave, cavitaria o refractaria</span></td></tr>
+      </table>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <span><strong>Duración:</strong> mínimo 12 meses de cultivos negativos. Forma nodular-bronquiectásica: esquema 3×/semana. Forma fibrocavitaria: esquema diario + amikacina inicial.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- M. ABSCESSUS -->
+<div class="bacteria-card" data-search="mycobacterium abscessus abscessus massiliense bolletii amikacina imipenem azitromicina claritromicina linezolid clofazimina">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#fdf0ef;color:#c0392b;font-size:9px;font-weight:700">MNT</div>
+    <div>
+      <div class="bacteria-name">M. abscessus complex</div>
+      <div class="bacteria-family">M. abscessus · M. massiliense · M. bolletii</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'morfologia')">Morfología / Cultivo</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Susceptibilidad</div>
+      <div class="sec-tab" onclick="switchTab(this,'tto')">Tratamiento</div>
+    </div>
+    <div class="panel active" data-panel="morfologia">
+      <div class="tag-row">
+        <span class="tag tag-red">Crecimiento rápido (&lt;7 días)</span>
+        <span class="tag tag-blue">BAAR positivo</span>
+        <span class="tag tag-red">Multirresistente intrínseco</span>
+        <span class="tag tag-warn">Acromógeno</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Característica</th><th>Detalle</th></tr>
+        <tr><td>Velocidad de crecimiento</td><td><strong>Rápido: colonias en &lt;7 días</strong> en agar sangre / MacConkey modificado</td></tr>
+        <tr><td>MacConkey</td><td>Crece en MacConkey sin cristal violeta (diferencia de micobacterias lentas)</td></tr>
+        <tr><td>Temperatura</td><td>35–37°C óptimo; NO crece a 42°C</td></tr>
+        <tr><td>Identificación</td><td>MALDI-TOF, secuenciación rpoB / hsp65. Distinguir subespecie: massiliense (erm(41) no funcional) vs abscessus (erm(41) funcional)</td></tr>
+        <tr><td>Pigmento</td><td>Colonias blancas, sin pigmento (acromógenas)</td></tr>
+      </table>
+      <div class="alert alert-danger">
+        <span class="alert-icon">🚨</span>
+        <span><strong>La subespecie importa:</strong> M. massiliense carece de erm(41) funcional → susceptible a macrólidos (mejor pronóstico). M. abscessus subsp. abscessus tiene erm(41) → resistencia inducible a macrólidos → peor pronóstico.</span>
+      </div>
+    </div>
+    <div class="panel" data-panel="abx">
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span><strong>M. abscessus</strong> es intrínsecamente resistente a la mayoría de antibióticos convencionales. Los breakpoints son del CLSI M62 + IDSA 2020. Siempre evaluar resistencia inducible a macrólidos (lectura a 3 y 14 días).</span></div>
+      <table class="mini-table">
+        <tr><th>Antibiótico</th><th>CMI S / R (µg/mL)</th><th>Nota clínica IDSA/CLSI</th></tr>
+        <tr><td>Amikacina</td><td class="mono">≤16 / ≥64</td><td><span class="r-s">Pilar IV en fase intensiva. Monitorear niveles.</span></td></tr>
+        <tr><td>Imipenem</td><td class="mono">≤4 / ≥16</td><td><span class="r-s">Pilar IV en fase intensiva. Infusión extendida.</span></td></tr>
+        <tr><td>Cefoxitina</td><td class="mono">≤16 / ≥256</td><td><span class="r-warn">IV en fase intensiva. Alternativa a imipenem.</span></td></tr>
+        <tr><td>Azitromicina</td><td class="mono">≤8 (S) / ≥32 (R)</td><td><span class="r-warn">⚠️ Evaluar inducción erm(41): leer a 3 y 14 días. Si CMI sube → resistencia inducible.</span></td></tr>
+        <tr><td>Claritromicina</td><td class="mono">≤2 / ≥8</td><td><span class="r-warn">Mismo riesgo de inducción. M. massiliense: generalmente sensible.</span></td></tr>
+        <tr><td>Linezolid</td><td class="mono">≤8 / ≥32</td><td><span class="r-s">Oral en fase de continuación. Toxicidad limitante (neuropatía, mielosupresión).</span></td></tr>
+        <tr><td>Clofazimina</td><td class="mono">ECV ≤0.5</td><td><span class="r-s">Oral. Sin breakpoint CLSI — usar ECV. Sinergia con macrólidos.</span></td></tr>
+        <tr><td>TMP-SMX</td><td class="mono">≤0.5/9.5 / ≥4/76</td><td><span class="r-var">Actividad variable. Útil en infección cutánea/tejidos blandos.</span></td></tr>
+        <tr><td>Tigeciclina</td><td class="mono">ECV ≤0.5</td><td><span class="r-warn">IV. Sin breakpoint validado. Opción en XDR. Náuseas limitantes.</span></td></tr>
+        <tr><td>Bedaquilina ⭐</td><td class="mono">ECV ≤0.12</td><td><span class="r-s">Nuevo. Activo in vitro. Evidencia clínica emergente en FQ/trasplante.</span></td></tr>
+        <tr><td>Omadaciclina ⭐</td><td class="mono">ECV ≤0.25</td><td><span class="r-s">Nuevo. Oral. Prometedor en M. abscessus pulmonar.</span></td></tr>
+      </table>
+      <div class="resist-card resist-mdr" style="margin-top:10px">
+        <h4>Resistencia inducible a macrólidos — lectura obligatoria a 14 días</h4>
+        <ul>
+          <li>M. abscessus subsp. abscessus: erm(41) funcional → macrólido CMI puede subir de ≤2 a ≥64 µg/mL a 14 días</li>
+          <li>M. massiliense: erm(41) truncado → macrólido generalmente activo → mejor pronóstico</li>
+          <li>M. bolletii: erm(41) funcional (similar a abscessus)</li>
+          <li>Siempre solicitar identificación de subespecie al laboratorio de referencia</li>
+        </ul>
+      </div>
+      <div class="clsi-note">⭐ Bedaquilina y omadaciclina: sin breakpoints CLSI M62 aún. Solo ECV. IDSA 2020 los menciona como opciones experimentales. CLSI M62-Ed1 2018 / IDSA NTM 2020.</div>
+    </div>
+    <div class="panel" data-panel="tto">
+      <div class="sec-label">Esquema IDSA 2020 — M. abscessus pulmonar</div>
+      <div class="alert alert-danger"><span class="alert-icon">🚨</span><span>No existe esquema curativo estándar. Objetivo: mejora clínica y microbiológica. Siempre multidisciplinario (infectólogo + neumólogo + farmacéutico clínico).</span></div>
+      <table class="mini-table">
+        <tr><th>Fase</th><th>Fármaco</th><th>Dosis</th></tr>
+        <tr><td rowspan="3">Intensiva (4–8 sem, IV)</td><td>Amikacina IV</td><td>15 mg/kg/día (o 25 mg/kg 3×/sem). Monitorear niveles.</td></tr>
+        <tr><td>Imipenem o Cefoxitina IV</td><td>Imipenem 1g c/8h o Cefoxitina 6g c/8h IC</td></tr>
+        <tr><td>Azitromicina (si susceptible)</td><td>250–500 mg/día VO</td></tr>
+        <tr><td rowspan="3">Continuación (≥12 meses)</td><td>Azitromicina (si susceptible)</td><td>250 mg/día o 500 mg 3×/sem</td></tr>
+        <tr><td>Linezolid</td><td>300–600 mg/día VO (toxicidad vigilar)</td></tr>
+        <tr><td>Clofazimina</td><td>100–200 mg/día VO</td></tr>
+      </table>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <span><strong>Trasplante pulmonar:</strong> considerar en enfermedad avanzada refractaria. M. abscessus es contraindicación relativa en algunos centros — evaluar individualmente.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- M. FORTUITUM -->
+<div class="bacteria-card" data-search="mycobacterium fortuitum crecimiento rapido amikacina ciprofloxacino TMP SMX imipenem doxiciclina cutanea">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#edf7f1;color:#1a6b3c;font-size:9px;font-weight:700">MNT</div>
+    <div>
+      <div class="bacteria-name">Mycobacterium fortuitum</div>
+      <div class="bacteria-family">Micobacteria de crecimiento rápido · Grupo fortuitum</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'morfologia')">Morfología / Cultivo</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Susceptibilidad</div>
+      <div class="sec-tab" onclick="switchTab(this,'tto')">Tratamiento</div>
+    </div>
+    <div class="panel active" data-panel="morfologia">
+      <div class="tag-row">
+        <span class="tag tag-red">Crecimiento rápido (&lt;7 días)</span>
+        <span class="tag tag-blue">BAAR positivo</span>
+        <span class="tag tag-green">Más sensible que M. abscessus</span>
+        <span class="tag tag-warn">Acromógeno</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Característica</th><th>Detalle</th></tr>
+        <tr><td>Velocidad de crecimiento</td><td>Muy rápido: colonias en 3–5 días</td></tr>
+        <tr><td>MacConkey</td><td>Crece en MacConkey sin cristal violeta</td></tr>
+        <tr><td>Nitrato reducción</td><td>Positivo (diferencia de M. chelonae)</td></tr>
+        <tr><td>Arylsulfatasa 3 días</td><td>Positivo (prueba diferencial grupo fortuitum)</td></tr>
+        <tr><td>Identificación</td><td>MALDI-TOF, secuenciación rpoB. Distinguir de M. chelonae y M. abscessus.</td></tr>
+      </table>
+      <div class="alert alert-info">
+        <span class="alert-icon">💡</span>
+        <span>M. fortuitum es el más susceptible de las micobacterias de crecimiento rápido. Mejor pronóstico que M. abscessus. Frecuente en infección cutánea post-procedimiento (cirugía estética, liposucción, acupuntura, tatuajes).</span>
+      </div>
+    </div>
+    <div class="panel" data-panel="abx">
+      <div class="alert alert-info"><span class="alert-icon">📋</span><span>M. fortuitum generalmente es susceptible a múltiples agentes — a diferencia de M. abscessus. Puntos de corte: CLSI M62-Ed1 2018.</span></div>
+      <table class="mini-table">
+        <tr><th>Antibiótico</th><th>CMI S / R (µg/mL)</th><th>Nota clínica</th></tr>
+        <tr><td>Amikacina</td><td class="mono">≤16 / ≥64</td><td><span class="r-s">Muy buena actividad. 1ra línea en infección grave.</span></td></tr>
+        <tr><td>Imipenem</td><td class="mono">≤4 / ≥16</td><td><span class="r-s">Buena actividad. Infección grave/diseminada.</span></td></tr>
+        <tr><td>Ciprofloxacino</td><td class="mono">≤1 / ≥4</td><td><span class="r-s">Oral. Buena actividad vs M. fortuitum (a diferencia de M. abscessus).</span></td></tr>
+        <tr><td>Levofloxacino</td><td class="mono">≤2 / ≥8</td><td><span class="r-s">Alternativa a ciprofloxacino.</span></td></tr>
+        <tr><td>Moxifloxacino</td><td class="mono">ECV ≤0.5</td><td><span class="r-s">Buena actividad in vitro. Sin breakpoint clínico validado.</span></td></tr>
+        <tr><td>TMP-SMX</td><td class="mono">≤0.5/9.5 / ≥4/76</td><td><span class="r-s">Oral. Opción en infección leve-moderada cutánea.</span></td></tr>
+        <tr><td>Doxiciclina</td><td class="mono">≤1 / ≥8</td><td><span class="r-s">Oral. Útil en infección cutánea o como stepdown.</span></td></tr>
+        <tr><td>Linezolid</td><td class="mono">≤8 / ≥32</td><td><span class="r-warn">Actividad variable. Reservar para fracaso o alergia.</span></td></tr>
+        <tr><td>Claritromicina</td><td class="mono">≤2 / ≥8</td><td><span class="r-var">Variable — NO tan confiable como en MAC. Verificar CMI.</span></td></tr>
+        <tr><td>Cefoxitina</td><td class="mono">≤16 / ≥256</td><td><span class="r-warn">Actividad variable. Menos útil que en M. abscessus.</span></td></tr>
+      </table>
+      <div class="clsi-note">CLSI M62-Ed1 2018. IDSA NTM Guidelines 2020. M. fortuitum tiene mejor perfil de susceptibilidad que M. abscessus — usar antibiograma para guiar.</div>
+    </div>
+    <div class="panel" data-panel="tto">
+      <div class="sec-label">Esquema IDSA 2020 — M. fortuitum</div>
+      <table class="mini-table">
+        <tr><th>Escenario</th><th>Esquema</th><th>Duración</th></tr>
+        <tr><td>Infección cutánea leve</td><td>TMP-SMX PO + doxiciclina PO (o ciprofloxacino PO)</td><td>4–6 meses</td></tr>
+        <tr><td>Infección cutánea moderada</td><td>Amikacina IV + imipenem IV → stepdown oral (cipro + TMP-SMX)</td><td>4–6 meses total</td></tr>
+        <tr><td>Infección diseminada / pulmonar</td><td>Amikacina IV + imipenem IV + fluoroquinolona PO × 4–8 sem → oral × 6–12 meses</td><td>≥12 meses</td></tr>
+        <tr><td>Infección de prótesis / dispositivos</td><td>Retiro del dispositivo + esquema IV 4–8 sem → oral</td><td>≥6 meses post-retiro</td></tr>
+      </table>
+      <div class="alert alert-info">
+        <span class="alert-icon">💡</span>
+        <span>Siempre usar <strong>≥2 agentes activos</strong> según antibiograma. El desbridamiento quirúrgico es fundamental en infección de tejidos blandos. Pronóstico generalmente favorable si se trata adecuadamente.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- M. CHELONAE -->
+<div class="bacteria-card" data-search="mycobacterium chelonae crecimiento rapido amikacina tobramicina claritromicina azitromicina linezolid cutanea oftalmológica">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#e8f0fb;color:#1a56a0;font-size:9px;font-weight:700">MNT</div>
+    <div>
+      <div class="bacteria-name">Mycobacterium chelonae</div>
+      <div class="bacteria-family">Micobacteria de crecimiento rápido · Grupo chelonae-abscessus</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'morfologia')">Morfología / Cultivo</div>
+      <div class="sec-tab" onclick="switchTab(this,'abx')">Susceptibilidad</div>
+      <div class="sec-tab" onclick="switchTab(this,'tto')">Tratamiento</div>
+    </div>
+    <div class="panel active" data-panel="morfologia">
+      <div class="tag-row">
+        <span class="tag tag-red">Crecimiento rápido (&lt;7 días)</span>
+        <span class="tag tag-blue">BAAR positivo</span>
+        <span class="tag tag-warn">Acromógeno</span>
+        <span class="tag tag-red">Ciprofloxacino R (intrínseco)</span>
+      </div>
+      <table class="mini-table">
+        <tr><th>Característica</th><th>Detalle</th></tr>
+        <tr><td>Velocidad de crecimiento</td><td>Rápido: colonias en 3–7 días</td></tr>
+        <tr><td>Temperatura</td><td>28–37°C. También crece a 30°C (importante en infección ocular)</td></tr>
+        <tr><td>Nitrato reducción</td><td><strong>Negativo</strong> (diferencia clave de M. fortuitum que es positivo)</td></tr>
+        <tr><td>NaCl al 5%</td><td>No crece (diferencia de M. abscessus que sí crece)</td></tr>
+        <tr><td>Identificación</td><td>MALDI-TOF, secuenciación rpoB/hsp65. Distinguir de M. abscessus es crítico por diferente patrón de susceptibilidad.</td></tr>
+      </table>
+      <div class="alert alert-info">
+        <span class="alert-icon">💡</span>
+        <span>M. chelonae es más frecuente en inmunosuprimidos (trasplante, corticoides crónicos). Principal causa de queratitis por MNT (lentes de contacto). A diferencia de M. fortuitum, es <strong>intrínsecamente resistente a fluoroquinolonas</strong>.</span>
+      </div>
+    </div>
+    <div class="panel" data-panel="abx">
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>M. chelonae es <strong>intrínsecamente resistente a ciprofloxacino y TMP-SMX</strong> — a diferencia de M. fortuitum. Puntos de corte: CLSI M62-Ed1 2018 / IDSA 2020.</span></div>
+      <table class="mini-table">
+        <tr><th>Antibiótico</th><th>CMI S / R (µg/mL)</th><th>Nota clínica</th></tr>
+        <tr><td>Claritromicina</td><td class="mono">≤2 / ≥8</td><td><span class="r-s">Agente de elección. Generalmente susceptible.</span></td></tr>
+        <tr><td>Azitromicina</td><td class="mono">≤8 / ≥32</td><td><span class="r-s">Alternativa a claritromicina. Misma clase.</span></td></tr>
+        <tr><td>Tobramicina</td><td class="mono">≤4 / ≥16</td><td><span class="r-s">Mejor aminoglucósido vs M. chelonae (más activo que amikacina).</span></td></tr>
+        <tr><td>Amikacina</td><td class="mono">≤16 / ≥64</td><td><span class="r-warn">Menos activa que tobramicina vs M. chelonae. Usar si tobramicina no disponible.</span></td></tr>
+        <tr><td>Linezolid</td><td class="mono">≤8 / ≥32</td><td><span class="r-s">Generalmente susceptible. Oral. Toxicidad vigilar.</span></td></tr>
+        <tr><td>Imipenem</td><td class="mono">≤4 / ≥16</td><td><span class="r-warn">Actividad variable. Menos predecible que en M. abscessus.</span></td></tr>
+        <tr><td>Ciprofloxacino</td><td class="mono">—</td><td><span class="r-r">Resistente intrínseco. No usar.</span></td></tr>
+        <tr><td>TMP-SMX</td><td class="mono">—</td><td><span class="r-r">Resistente intrínseco. No usar.</span></td></tr>
+        <tr><td>Clofazimina</td><td class="mono">ECV ≤0.5</td><td><span class="r-s">Actividad in vitro. Complemento oral en infección crónica.</span></td></tr>
+      </table>
+      <div class="resist-card resist-info" style="margin-top:10px">
+        <h4>Diferencial clave: M. chelonae vs M. fortuitum</h4>
+        <ul>
+          <li>Ciprofloxacino: M. fortuitum S / M. chelonae <strong>R</strong></li>
+          <li>TMP-SMX: M. fortuitum S / M. chelonae <strong>R</strong></li>
+          <li>Tobramicina: M. chelonae más sensible que M. fortuitum</li>
+          <li>Nitrato reducción: M. fortuitum + / M. chelonae <strong>−</strong></li>
+        </ul>
+      </div>
+      <div class="clsi-note">CLSI M62-Ed1 2018 / IDSA NTM 2020. Resistencia intrínseca a ciprofloxacino y TMP-SMX documentada en Appendix B de CLSI M62.</div>
+    </div>
+    <div class="panel" data-panel="tto">
+      <div class="sec-label">Esquema IDSA 2020 — M. chelonae</div>
+      <table class="mini-table">
+        <tr><th>Escenario</th><th>Esquema</th><th>Duración</th></tr>
+        <tr><td>Infección cutánea leve-moderada</td><td>Claritromicina PO ± tobramicina IV (si grave)</td><td>4–6 meses</td></tr>
+        <tr><td>Infección cutánea grave / diseminada</td><td>Tobramicina IV + claritromicina PO + linezolid PO</td><td>6–12 meses</td></tr>
+        <tr><td>Queratitis (ocular)</td><td>Amikacina tópica + claritromicina tópica/PO</td><td>≥3 meses; cirugía si refractaria</td></tr>
+        <tr><td>Inmunosuprimido</td><td>Claritromicina + tobramicina IV fase inicial → oral ≥6 meses</td><td>≥12 meses</td></tr>
+      </table>
+      <div class="alert alert-danger">
+        <span class="alert-icon">🚨</span>
+        <span><strong>Nunca usar fluoroquinolonas ni TMP-SMX</strong> en M. chelonae — resistencia intrínseca. Error frecuente al confundirla con M. fortuitum sin identificación de especie.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLA COMPARATIVA -->
+<div class="bacteria-card">
+  <div class="bacteria-header" onclick="toggleCard(this)">
+    <div class="gram-badge" style="background:#f7f8fa;color:#4a5568;font-size:9px;font-weight:700">COMP</div>
+    <div>
+      <div class="bacteria-name" style="font-size:15px">Tabla comparativa rápida</div>
+      <div class="bacteria-family">Diferencial MNT de crecimiento rápido</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div style="padding:14px;overflow-x:auto">
+      <table class="mini-table">
+        <tr>
+          <th>Característica</th>
+          <th><em>M. abscessus</em></th>
+          <th><em>M. fortuitum</em></th>
+          <th><em>M. chelonae</em></th>
+        </tr>
+        <tr><td>Nitrato reducción</td><td>Negativo</td><td class="r-s">Positivo</td><td>Negativo</td></tr>
+        <tr><td>NaCl 5%</td><td class="r-s">Crece</td><td>Variable</td><td>No crece</td></tr>
+        <tr><td>Arylsulfatasa 3d</td><td>Negativo</td><td class="r-s">Positivo</td><td>Negativo</td></tr>
+        <tr><td>Ciprofloxacino</td><td class="r-r">R</td><td class="r-s">S</td><td class="r-r">R</td></tr>
+        <tr><td>TMP-SMX</td><td class="r-var">Variable</td><td class="r-s">S</td><td class="r-r">R</td></tr>
+        <tr><td>Claritromicina</td><td class="r-warn">Inducible*</td><td class="r-var">Variable</td><td class="r-s">S</td></tr>
+        <tr><td>Tobramicina</td><td class="r-s">S</td><td class="r-warn">Variable</td><td class="r-s">Más activa</td></tr>
+        <tr><td>Agente clave 1ra línea</td><td>Amikacina + imipenem</td><td>Cipro + TMP-SMX</td><td>Claritromicina</td></tr>
+        <tr><td>Presentación típica</td><td>Pulmonar / FQ</td><td>Cutánea post-proc.</td><td>Cutánea / ocular</td></tr>
+      </table>
+      <div class="clsi-note">* M. abscessus subsp. massiliense: claritromicina generalmente S (erm(41) no funcional). M. abscessus subsp. abscessus: resistencia inducible frecuente.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /section-micobacterias -->
 
 <!-- ========== SECTION MICROBIOLOGÍA BÁSICA ========== -->
 <div id="section-basica" class="hidden">
@@ -1625,6 +2618,108 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
     <span class="basica-hero-chip">Árbol visual</span>
     <span class="basica-hero-chip">Modo interactivo</span>
     <span class="basica-hero-chip">Paso a paso</span>
+  </div>
+</div>
+
+
+<!-- STAPH SCORE -->
+<div class="bacteria-card" style="margin-bottom:16px;border-color:#c0392b">
+  <div class="bacteria-header" onclick="toggleCard(this)" style="cursor:pointer">
+    <div class="gram-badge" style="background:#fdf0ef;color:#c0392b;font-size:9px;font-weight:700">SCORE</div>
+    <div>
+      <div class="bacteria-name" style="font-size:16px">STAPH score</div>
+      <div class="bacteria-family">Diferenciación rápida S. aureus vs CoNS en hemocultivo positivo</div>
+    </div>
+    <div class="expand-icon">⌄</div>
+  </div>
+  <div class="bacteria-body">
+    <div class="section-tabs">
+      <div class="sec-tab active" onclick="switchTab(this,'staph-calc')">Calculadora</div>
+      <div class="sec-tab" onclick="switchTab(this,'staph-info')">Criterios</div>
+      <div class="sec-tab" onclick="switchTab(this,'staph-interp')">Interpretación</div>
+    </div>
+
+    <!-- CALCULADORA -->
+    <div class="panel active" data-panel="staph-calc">
+      <div class="alert alert-info"><span class="alert-icon">📋</span><span>Hayashi &amp; Yoshida 2024 · <em>Microbiology Spectrum</em> · Validado en sistema BACTEC FX · n=148</span></div>
+      <div id="staph-items" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+
+        <div class="abx-row" style="align-items:center">
+          <div class="abx-name"><strong>S — Size of clusters</strong><small>Promedio de bacterias en racimos &gt;16 en 10 campos</small></div>
+          <label style="display:flex;align-items:center;gap:6px;flex-shrink:0;cursor:pointer">
+            <input type="checkbox" id="s-size" onchange="calcStaph()" style="width:18px;height:18px;accent-color:#c0392b">
+            <span style="font-size:12px;font-weight:600;color:var(--text2)">+1</span>
+          </label>
+        </div>
+
+        <div class="abx-row" style="align-items:center">
+          <div class="abx-name"><strong>T — Time to positivity</strong><small>Botella positiva en &lt;16 horas</small></div>
+          <label style="display:flex;align-items:center;gap:6px;flex-shrink:0;cursor:pointer">
+            <input type="checkbox" id="s-time" onchange="calcStaph()" style="width:18px;height:18px;accent-color:#c0392b">
+            <span style="font-size:12px;font-weight:600;color:var(--text2)">+1</span>
+          </label>
+        </div>
+
+        <div class="abx-row" style="align-items:center">
+          <div class="abx-name"><strong>A — Aerobic enlargement</strong><small>Bacteria más grande en botella aerobia ≥1 µm, O bacteria más pequeña en botella anaerobia &lt;1 µm</small></div>
+          <label style="display:flex;align-items:center;gap:6px;flex-shrink:0;cursor:pointer">
+            <input type="checkbox" id="s-aero" onchange="calcStaph()" style="width:18px;height:18px;accent-color:#c0392b">
+            <span style="font-size:12px;font-weight:600;color:var(--text2)">+1</span>
+          </label>
+        </div>
+
+        <div class="abx-row" style="align-items:center">
+          <div class="abx-name"><strong>P — Pint</strong><small>Racimos tridimensionales — difíciles de enfocar en el microscopio</small></div>
+          <label style="display:flex;align-items:center;gap:6px;flex-shrink:0;cursor:pointer">
+            <input type="checkbox" id="s-pint" onchange="calcStaph()" style="width:18px;height:18px;accent-color:#c0392b">
+            <span style="font-size:12px;font-weight:600;color:var(--text2)">+1</span>
+          </label>
+        </div>
+
+        <div class="abx-row" style="align-items:center">
+          <div class="abx-name"><strong>H — Hemorrhage</strong><small>Coágulos o membranas rosadas (fibrina) alrededor de las bacterias</small></div>
+          <label style="display:flex;align-items:center;gap:6px;flex-shrink:0;cursor:pointer">
+            <input type="checkbox" id="s-hem" onchange="calcStaph()" style="width:18px;height:18px;accent-color:#c0392b">
+            <span style="font-size:12px;font-weight:600;color:var(--text2)">+1</span>
+          </label>
+        </div>
+
+      </div>
+
+      <!-- RESULTADO -->
+      <div id="staph-result" style="background:var(--bg3);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:36px;font-weight:700;color:var(--text);line-height:1" id="staph-score-num">0</div>
+        <div style="font-size:12px;color:var(--text3);margin:4px 0 10px">puntos / 5</div>
+        <div id="staph-interp-badge" style="display:inline-block;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;background:var(--bg2);color:var(--text2);border:1px solid var(--border)">Selecciona los criterios observados</div>
+      </div>
+      <button onclick="resetStaph()" style="margin-top:10px;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;color:var(--text2);cursor:pointer;font-family:'Outfit',sans-serif">↺ Reiniciar</button>
+    </div>
+
+    <!-- CRITERIOS -->
+    <div class="panel" data-panel="staph-info">
+      <table class="mini-table">
+        <tr><th>Letra</th><th>Parámetro</th><th>Condición para +1 punto</th></tr>
+        <tr><td><strong>S</strong></td><td>Size of clusters</td><td>Promedio de bacterias en racimos &gt;16 en 10 campos a 1000×</td></tr>
+        <tr><td><strong>T</strong></td><td>Time to positivity</td><td>Botella BACTEC positiva en &lt;16 horas</td></tr>
+        <tr><td><strong>A</strong></td><td>Aerobic enlargement</td><td>Bacteria más grande aerobia ≥1 µm, O bacteria más pequeña anaerobia &lt;1 µm</td></tr>
+        <tr><td><strong>P</strong></td><td>Pint</td><td>Racimos con apariencia tridimensional (difíciles de enfocar)</td></tr>
+        <tr><td><strong>H</strong></td><td>Hemorrhage</td><td>Coágulos/membranas rosadas (fibrina) directamente adheridas a los racimos</td></tr>
+      </table>
+      <div class="alert alert-warn" style="margin-top:10px"><span class="alert-icon">⚠️</span><span>Validado exclusivamente en <strong>BACTEC FX</strong> con botellas 23F (aerobia) y 22F (anaerobia). No validado en BacT/ALERT ni botellas pediátricas. Estudio unicéntrico (Japón, 2024).</span></div>
+      <div class="clsi-note" style="margin-top:8px">Hayashi T, Yoshida M. Microbiology Spectrum. Oct 2024;12(10). DOI: 10.1128/spectrum.01223-24</div>
+    </div>
+
+    <!-- INTERPRETACIÓN -->
+    <div class="panel" data-panel="staph-interp">
+      <table class="mini-table">
+        <tr><th>Score</th><th>Sensibilidad</th><th>Especificidad</th><th>Interpretación</th></tr>
+        <tr><td><strong>0–2</strong></td><td class="r-s">100%</td><td>68.7%</td><td><span style="background:var(--success-bg);color:var(--success);padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">Descarta SA</span></td></tr>
+        <tr><td><strong>≥3</strong></td><td>93.9%</td><td>91.9%</td><td><span style="background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">Probable SA — confirmar</span></td></tr>
+        <tr><td><strong>5</strong></td><td>34.7%</td><td class="r-s">100%</td><td><span style="background:var(--danger-bg);color:var(--danger);padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">Confirma SA</span></td></tr>
+      </table>
+      <div class="alert alert-info" style="margin-top:10px"><span class="alert-icon">💡</span><span>AUC 0.964–0.971. Kappa 0.67 (acuerdo sustancial) al corte de 3 puntos. Los parámetros con mayor peso multivariado: <strong>Hemorrhage</strong> y <strong>Pint</strong>.</span></div>
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><span>S. hominis y S. epidermidis pueden tener racimos grandes y tridimensionales — falsos positivos más frecuentes con score 3–4.</span></div>
+    </div>
   </div>
 </div>
 
@@ -1839,11 +2934,37 @@ main { padding: 14px 16px 80px; max-width: 680px; margin: 0 auto; }
 
 </main>
 
-<div class="bottom-note">
-  MicroGuía v1.1 · Solo uso educativo · No reemplaza el criterio clínico · <strong>CLSI M100-Ed36 (2026)</strong> / EUCAST v14.1
+
 </div>
 
+
+<div class="bottom-note" id="bottomNote">Asa v1.0 · Solo uso educativo · No reemplaza el criterio clínico · CLSI M100-Ed36 2026 / CLSI M62</div>
+<div class="toast" id="toast"></div>
+
 <script>
+/* ═══ ASA CORE ═══ */
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+}
+
+
+/* Auto dark mode */
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.getElementById('themeBtn').textContent = '☀️';
+}
+
+/* ═══ GUÍA JS ═══ */
+
 function selectHongo(id, btn) {
   document.querySelectorAll('#section-hongos .algo-sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1852,12 +2973,7 @@ function selectHongo(id, btn) {
 }
 
 /* ===== THEME ===== */
-function toggleTheme() {
-  const html = document.documentElement;
-  const btn = document.getElementById('themeBtn');
-  if (html.getAttribute('data-theme') === 'dark') { html.removeAttribute('data-theme'); btn.textContent = '🌙 Oscuro'; }
-  else { html.setAttribute('data-theme', 'dark'); btn.textContent = '☀️ Claro'; }
-}
+/* toggleTheme: handled by asa core */
 
 /* ===== CARDS ===== */
 function toggleCard(header) { header.closest('.bacteria-card').classList.toggle('open'); }
@@ -2096,11 +3212,46 @@ function resetInteractive(algoId) {
   drawIxStep(algoId);
 }
 
-/* ===== INIT ===== */
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.documentElement.setAttribute('data-theme', 'dark');
-  document.getElementById('themeBtn').textContent = '☀️ Claro';
+
+
+
+
+/* ═══ STAPH SCORE ═══ */
+function calcStaph(){
+  const ids = ['s-size','s-time','s-aero','s-pint','s-hem'];
+  const score = ids.filter(id => document.getElementById(id).checked).length;
+  const num = document.getElementById('staph-score-num');
+  const badge = document.getElementById('staph-interp-badge');
+  const result = document.getElementById('staph-result');
+  if(num) num.textContent = score;
+
+  let bg, color, text, borderColor;
+  if(score === 0){
+    bg='var(--bg2)'; color='var(--text2)'; text='Selecciona los criterios observados'; borderColor='var(--border)';
+  } else if(score <= 2){
+    bg='var(--success-bg)'; color='var(--success)'; text='Score '+score+' — Descarta SA (S 100%)'; borderColor='var(--success)';
+  } else if(score === 3 || score === 4){
+    bg='var(--warn-bg)'; color='var(--warn)'; text='Score '+score+' — Probable SA · Confirmar con coagulasa / MALDI-TOF'; borderColor='var(--warn)';
+  } else {
+    bg='var(--danger-bg)'; color='var(--danger)'; text='Score 5 — Confirma SA (E 100%)'; borderColor='var(--danger)';
+  }
+
+  if(badge){
+    badge.style.background = bg;
+    badge.style.color = color;
+    badge.style.borderColor = borderColor;
+    badge.textContent = text;
+  }
 }
+
+function resetStaph(){
+  ['s-size','s-time','s-aero','s-pint','s-hem'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.checked = false;
+  });
+  calcStaph();
+}
+
 </script>
 </body>
 </html>
